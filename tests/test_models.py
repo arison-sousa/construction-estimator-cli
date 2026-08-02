@@ -8,6 +8,16 @@ from unittest.mock import patch
 
 from estimativa.cli import ask_item_index, open_pdf
 from estimativa.models import DEFAULT_TAXES, Item, Quote, brl, money, number
+from estimativa.naming import (
+    ProposalIdentity,
+    identity_from_info,
+    next_quote_identity,
+    next_revision_identity,
+    parse_proposal_identity,
+    quote_path,
+    safe_filename_component,
+    set_quote_identity,
+)
 from estimativa.pdf_export import (
     ACCUMULATED_TOTAL_STYLE,
     ACCUMULATED_TOTAL_WIDTHS,
@@ -19,12 +29,71 @@ from estimativa.pdf_export import (
     RESPONSIBILITY_WIDTH,
     SIGNATURE_ROW_HEIGHTS,
     SIGNATURE_STYLE,
+    _accumulated_total,
     _items_table,
     _styles,
 )
 
 
 class ModelTests(unittest.TestCase):
+    def test_proposal_identity_uses_fixed_width_format(self):
+        self.assertEqual(ProposalIdentity(1, 2026, 0).text, "0001-26-00")
+        self.assertEqual(ProposalIdentity(684, 2027, 3).text, "0684-27-03")
+
+    def test_legacy_proposal_identity_is_supported(self):
+        identity = parse_proposal_identity("0669-26-rev00")
+        self.assertEqual(identity, ProposalIdentity(669, 2026, 0))
+
+    def test_quote_filename_is_readable_and_os_safe(self):
+        quote = Quote()
+        quote.info.client = 'JBS: Foods | Sul'
+        quote.info.location = "Ipumirim/SC"
+        quote.info.project = 'Reforma * Piso? "Almoxarifado"'
+        set_quote_identity(quote, ProposalIdentity(1, 2026, 0))
+        path = quote_path(quote, "propostas")
+        self.assertEqual(
+            path.name,
+            "0001-26-00 - JBS Foods Sul Ipumirim SC - Reforma Piso Almoxarifado.json",
+        )
+        self.assertFalse(any(character in path.name for character in '<>:"/\\|?*'))
+
+    def test_filename_components_are_limited_and_have_no_trailing_dot_or_space(self):
+        component = safe_filename_component("A" * 100 + ". ", "fallback", 20)
+        self.assertEqual(component, "A" * 20)
+
+    def test_next_quote_number_resets_each_year(self):
+        with tempfile.TemporaryDirectory() as folder:
+            root = Path(folder)
+            (root / "0099-25-00 - Cliente Local - Obra.json").write_text("{}", encoding="utf-8")
+            (root / "0002-26-00 - Cliente Local - Obra.pdf").touch()
+            self.assertEqual(next_quote_identity(root, 2026), ProposalIdentity(3, 2026, 0))
+            self.assertEqual(next_quote_identity(root, 2027), ProposalIdentity(1, 2027, 0))
+
+    def test_next_quote_number_can_read_identity_from_json_metadata(self):
+        with tempfile.TemporaryDirectory() as folder:
+            root = Path(folder)
+            quote = Quote()
+            set_quote_identity(quote, ProposalIdentity(8, 2026, 0))
+            quote.save(root / "nome-antigo.json")
+            self.assertEqual(next_quote_identity(root, 2026), ProposalIdentity(9, 2026, 0))
+
+    def test_next_revision_preserves_number_and_year(self):
+        with tempfile.TemporaryDirectory() as folder:
+            root = Path(folder)
+            (root / "0007-26-00 - Cliente Local - Obra.json").write_text("{}", encoding="utf-8")
+            (root / "0007-26-01 - Cliente Local - Obra.json").write_text("{}", encoding="utf-8")
+            revised = next_revision_identity(root, ProposalIdentity(7, 2026, 0))
+            self.assertEqual(revised, ProposalIdentity(7, 2026, 2))
+
+    def test_structured_identity_survives_save_and_load(self):
+        with tempfile.TemporaryDirectory() as folder:
+            path = Path(folder) / "quote.json"
+            quote = Quote()
+            set_quote_identity(quote, ProposalIdentity(12, 2026, 4))
+            quote.save(path)
+            loaded = Quote.load(path)
+            self.assertEqual(identity_from_info(loaded.info), ProposalIdentity(12, 2026, 4))
+
     def test_brazilian_money(self):
         self.assertEqual(money("20.000,50"), Decimal("20000.50"))
         self.assertEqual(brl(Decimal("20000.5")), "R$ 20.000,50")
@@ -33,6 +102,15 @@ class ModelTests(unittest.TestCase):
         self.assertEqual(Quote().taxes, DEFAULT_TAXES)
         self.assertEqual(len(DEFAULT_TAXES.splitlines()), 8)
         self.assertIn("DEBASE CONSTRUTORA LTDA", DEFAULT_TAXES)
+
+    def test_default_commercial_terms(self):
+        quote = Quote()
+        self.assertEqual(quote.validity, "15 dias")
+        self.assertEqual(quote.payment_terms, "-")
+        self.assertEqual(quote.freight, "CIF")
+        self.assertEqual(quote.start_deadline, "-")
+        self.assertEqual(quote.execution_deadline, "-")
+        self.assertEqual(quote.warranty, "-")
 
     def test_company_details_have_relaxed_line_spacing(self):
         styles = _styles()
@@ -50,6 +128,18 @@ class ModelTests(unittest.TestCase):
             {styles[name].leading for name in ("item_body", "item_center", "item_bold", "item_right_bold", "item_section")},
             {9.8},
         )
+
+    def test_material_and_labor_prices_are_centered_and_final_price_is_right_aligned(self):
+        quote = Quote(items=[
+            Item("", "", "", section="Serviços", is_section=True),
+            Item("", "", "Item", material_unit=money("80"), labor_unit=money("90")),
+        ])
+        quote.normalize_sections()
+        table = _items_table(quote, _styles())
+        item_row = table._cellvalues[3]
+
+        self.assertTrue(all(item_row[column].style.alignment == 1 for column in range(9) if column != 1 and column != 8))
+        self.assertEqual(item_row[8].style.alignment, 2)
 
     def test_totals_and_round_trip(self):
         quote = Quote(items=[Item("1", "Teste", "", "und", number("2"), money("10,50"), money("4"))])
@@ -111,6 +201,23 @@ class ModelTests(unittest.TestCase):
         self.assertAlmostEqual(sum(ACCUMULATED_TOTAL_WIDTHS[:2]), sum(ITEM_TABLE_WIDTHS[:6]))
         self.assertEqual(ACCUMULATED_TOTAL_WIDTHS[2:], ITEM_TABLE_WIDTHS[6:])
         self.assertIn(("GRID", (2, 0), (-1, 0), 0.45, BLACK), ACCUMULATED_TOTAL_STYLE)
+
+    def test_subtotal_and_accumulated_material_and_labor_are_centered(self):
+        quote = Quote(items=[
+            Item("", "", "", section="Serviços", is_section=True),
+            Item("", "", "Item", material_unit=money("80"), labor_unit=money("90")),
+        ])
+        quote.normalize_sections()
+        styles = _styles()
+
+        items_table = _items_table(quote, styles)
+        subtotal_row = items_table._cellvalues[4]
+        accumulated_row = _accumulated_total(quote, styles)._cellvalues[0]
+
+        self.assertTrue(all(subtotal_row[column].style.alignment == 1 for column in (6, 7)))
+        self.assertEqual(subtotal_row[8].style.alignment, 2)
+        self.assertTrue(all(accumulated_row[column].style.alignment == 1 for column in (2, 3)))
+        self.assertEqual(accumulated_row[4].style.alignment, 2)
 
     def test_final_total_column_is_only_slightly_wider_than_price_columns(self):
         price_columns = ITEM_TABLE_WIDTHS[4:8]

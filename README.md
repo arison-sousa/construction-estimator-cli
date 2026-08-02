@@ -14,19 +14,49 @@ python3 -m pip install -r requirements.txt
 
 ## Uso
 
+Abrir a tela inicial:
+
+```bash
+python3 orcamento.py
+```
+
+A tela permite criar uma proposta, selecionar uma proposta salva para editar ou revisar, listar propostas, visualizar o PDF e abrir a pasta de propostas no Finder.
+
 Criar uma proposta interativamente:
 
 ```bash
-python3 orcamento.py novo propostas/cliente-obra.json
+python3 orcamento.py novo
 ```
 
-O editor mostra um menu para cadastrar itens, condições comerciais e responsabilidades. Nas descrições com várias linhas, digite um ponto (`.`) sozinho para finalizar.
+O programa atribui automaticamente o próximo número disponível no ano atual e cria um nome legível e compatível com Windows e macOS:
+
+```text
+0001-26-00 - JBS Ipumirim - Reforma Piso Almoxarifado.json
+```
+
+No ano seguinte, a contagem reinicia em `0001`. Para salvar em outra pasta, use `--diretorio`:
+
+```bash
+python3 orcamento.py novo --diretorio propostas
+```
+
+O editor permite adicionar seções (sempre acompanhadas do primeiro item), acrescentar itens a uma seção e editar as condições comerciais. Ao adicionar um item, informe o número da seção ou pressione `Enter` para usar a última. Para editar ou remover uma linha, informe o número da seção ou do item, como `2` ou `2.1`. Editar uma seção altera seu título; editar um item permite atualizar sua descrição, unidade, quantidade e valores. As responsabilidades permanecem com o texto padrão da proposta.
+
+Ao preencher uma descrição com várias linhas, o programa abre um editor de texto onde é possível colar, navegar e corrigir todo o conteúdo. Use as setas para navegar, `Ctrl+O` e `Enter` para salvar e `Ctrl+X` para voltar à proposta.
 
 Reabrir uma proposta:
 
 ```bash
 python3 orcamento.py editar propostas/cliente-obra.json
 ```
+
+Editar mantém o número e a revisão atuais. Para preservar a proposta original e criar a próxima revisão:
+
+```bash
+python3 orcamento.py revisar "propostas/0001-26-00 - JBS Ipumirim - Reforma Piso Almoxarifado.json"
+```
+
+Esse comando cria a revisão `01`; revisões posteriores avançam para `02`, `03` e assim por diante.
 
 Gerar ou regenerar o PDF:
 

@@ -46,7 +46,8 @@ SECTION_GAP_HEIGHT = ITEM_ROW_HEIGHT
 ACCUMULATED_TOTAL_STYLE = [
     ("BOX", (0, 0), (-1, -1), 1.0, BLACK),
     ("GRID", (2, 0), (-1, 0), 0.45, BLACK),
-    ("BACKGROUND", (2, 0), (-1, -1), TOTAL),
+    ("BACKGROUND", (2, 0), (3, 0), LIGHT),
+    ("BACKGROUND", (4, 0), (4, 0), TOTAL),
     ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
     ("LEFTPADDING", (0, 0), (-1, -1), 2),
     ("RIGHTPADDING", (0, 0), (-1, -1), 2),
@@ -112,7 +113,7 @@ def _header(quote: Quote, styles, logo_path: Path | None):
             [_p("<b>CLIENTE:</b>", styles["body"], markup=True), _p(info.client, styles["bold"])],
             [_p("<b>OBRA:</b>", styles["body"], markup=True), _p(info.project, styles["bold"])],
             [_p("<b>CONTATO:</b>", styles["body"], markup=True), _p(info.contact, styles["bold"])],
-            [_p("<b>CIDADE:</b>", styles["body"], markup=True), _p(info.city, styles["bold"])],
+            [_p("<b>LOCAL:</b>", styles["body"], markup=True), _p(info.location or info.city, styles["bold"])],
             [_p("<b>PROPOSTA:</b>", styles["body"], markup=True), _p(info.proposal, styles["center"]), _p("<b>DATA:</b>", styles["body"], markup=True), _p(info.issue_date, styles["center"])],
         ],
         colWidths=[24 * mm, 58 * mm, 18 * mm, 28 * mm],
@@ -147,10 +148,12 @@ def _items_table(quote: Quote, styles):
 
     def append_section_subtotal(add_separator: bool) -> None:
         section_total = section_material + section_labor
-        rows.append(["", _p("Subtotal", styles["item_bold"]), "", "", "", "", _p(brl(section_material), styles["item_right_bold"]), _p(brl(section_labor), styles["item_right_bold"]), _p(brl(section_total), styles["item_right_bold"])])
+        rows.append(["", _p("Subtotal", styles["item_bold"]), "", "", "", "", _p(brl(section_material), styles["item_center_bold"]), _p(brl(section_labor), styles["item_center_bold"]), _p(brl(section_total), styles["item_right_bold"])])
         subtotal_row = len(rows) - 1
         commands.extend([
-            ("SPAN", (1, subtotal_row), (5, subtotal_row)), ("BACKGROUND", (6, subtotal_row), (8, subtotal_row), TOTAL),
+            ("SPAN", (1, subtotal_row), (5, subtotal_row)),
+            ("BACKGROUND", (6, subtotal_row), (7, subtotal_row), LIGHT),
+            ("BACKGROUND", (8, subtotal_row), (8, subtotal_row), TOTAL),
             ("LINEABOVE", (0, subtotal_row), (-1, subtotal_row), 1.0, BLACK),
             ("FONTSIZE", (0, subtotal_row), (5, subtotal_row), 8.0), ("LEADING", (0, subtotal_row), (5, subtotal_row), ITEM_ROW_LEADING),
         ])
@@ -205,11 +208,29 @@ def _items_table(quote: Quote, styles):
         ])
         section_material += item.material_total
         section_labor += item.labor_total
-        commands.append(("BACKGROUND", (8, len(rows) - 1), (8, len(rows) - 1), TOTAL))
+        item_row = len(rows) - 1
+        commands.extend([
+            ("BACKGROUND", (6, item_row), (7, item_row), LIGHT),
+            ("BACKGROUND", (8, item_row), (8, item_row), TOTAL),
+        ])
     append_section_subtotal(add_separator=False)
     table = LongTable(rows, colWidths=ITEM_TABLE_WIDTHS, repeatRows=2, splitByRow=1)
     table.setStyle(TableStyle(commands))
     return table
+
+
+def _accumulated_total(quote: Quote, styles):
+    return Table(
+        [[
+            "",
+            _p("TOTAL ACUMULADO", styles["item_bold"]),
+            _p(brl(quote.material_total), styles["item_center_bold"]),
+            _p(brl(quote.labor_total), styles["item_center_bold"]),
+            _p(brl(quote.total), styles["item_right_bold"]),
+        ]],
+        colWidths=ACCUMULATED_TOTAL_WIDTHS,
+        style=TableStyle(ACCUMULATED_TOTAL_STYLE),
+    )
 
 
 def _responsibilities(quote: Quote, styles):
@@ -252,7 +273,7 @@ def export_pdf(quote: Quote, target: str | Path, logo_path: str | Path | None = 
         canvas.restoreState()
 
     story = [_header(quote, styles, logo), _items_table(quote, styles), Spacer(1, 4 * mm)]
-    story.append(Table([["", _p("TOTAL ACUMULADO", styles["item_bold"]), _p(brl(quote.material_total), styles["item_right_bold"]), _p(brl(quote.labor_total), styles["item_right_bold"]), _p(brl(quote.total), styles["item_right_bold"])]], colWidths=ACCUMULATED_TOTAL_WIDTHS, style=TableStyle(ACCUMULATED_TOTAL_STYLE)))
+    story.append(_accumulated_total(quote, styles))
     story.extend([Spacer(1, 5 * mm), _responsibilities(quote, styles), Spacer(1, 5 * mm), _commercial(quote, styles), Spacer(1, 3 * mm)])
     signature = Table([
         [_p(quote.notes, styles["body"]), ""],

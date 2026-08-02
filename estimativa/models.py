@@ -69,10 +69,14 @@ class Company:
 @dataclass
 class QuoteInfo:
     client: str = ""
+    location: str = ""
     project: str = ""
     contact: str = ""
     city: str = ""
     proposal: str = ""
+    proposal_number: int = 0
+    proposal_year: int = 0
+    proposal_revision: int = 0
     issue_date: str = field(default_factory=lambda: date.today().strftime("%d/%m/%Y"))
 
 
@@ -145,11 +149,11 @@ class Quote:
     client_responsibilities: list[str] = field(default_factory=lambda: list(DEFAULT_CLIENT_RESPONSIBILITIES))
     contractor_responsibilities: list[str] = field(default_factory=lambda: list(DEFAULT_CONTRACTOR_RESPONSIBILITIES))
     validity: str = "15 dias"
-    payment_terms: str = "120 ddf"
+    payment_terms: str = "-"
     freight: str = "CIF"
-    start_deadline: str = "7 dias"
-    execution_deadline: str = "7 dias"
-    warranty: str = "2 anos"
+    start_deadline: str = "-"
+    execution_deadline: str = "-"
+    warranty: str = "-"
     taxes: str = DEFAULT_TAXES
     notes: str = "Atenciosamente,"
 
