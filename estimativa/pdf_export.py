@@ -20,7 +20,7 @@ from reportlab.platypus import (
     TableStyle,
 )
 
-from .models import Quote, brl, decimal_text
+from .models import ZERO, Quote, brl, decimal_text
 
 
 BLACK = colors.HexColor("#111111")
@@ -28,6 +28,25 @@ HEADER = colors.HexColor("#c9c9c9")
 LIGHT = colors.HexColor("#eeeeee")
 TOTAL = colors.HexColor("#d9d9d9")
 BLUE = colors.HexColor("#29465b")
+ITEM_TABLE_WIDTHS = [12 * mm, 105 * mm, 14 * mm, 15 * mm, 25 * mm, 25 * mm, 25 * mm, 25 * mm, 31 * mm]
+ACCUMULATED_TOTAL_WIDTHS = [
+    ITEM_TABLE_WIDTHS[0],
+    sum(ITEM_TABLE_WIDTHS[1:6]),
+    ITEM_TABLE_WIDTHS[6],
+    ITEM_TABLE_WIDTHS[7],
+    ITEM_TABLE_WIDTHS[8],
+]
+CONTENT_WIDTH = sum(ITEM_TABLE_WIDTHS)
+RESPONSIBILITY_GAP = 5 * mm
+RESPONSIBILITY_WIDTH = (CONTENT_WIDTH - RESPONSIBILITY_GAP) / 2
+ACCUMULATED_TOTAL_STYLE = [
+    ("BOX", (0, 0), (-1, -1), 1.0, BLACK),
+    ("GRID", (2, 0), (-1, 0), 0.45, BLACK),
+    ("BACKGROUND", (2, 0), (-1, -1), TOTAL),
+    ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
+    ("LEFTPADDING", (0, 0), (-1, -1), 2),
+    ("RIGHTPADDING", (0, 0), (-1, -1), 2),
+]
 
 
 def _styles():
@@ -83,7 +102,6 @@ def _header(quote: Quote, styles, logo_path: Path | None):
 
 
 def _items_table(quote: Quote, styles):
-    widths = [12 * mm, 105 * mm, 14 * mm, 15 * mm, 25 * mm, 25 * mm, 25 * mm, 25 * mm, 31 * mm]
     rows = [
         [_p("ITEM", styles["center"]), _p("SERVIÇOS", styles["center"]), _p("UND", styles["center"]), _p("QUANT", styles["center"]), _p("PREÇO UNITÁRIO", styles["center"]), "", _p("PREÇO TOTAL", styles["center"]), "", _p("PREÇO<br/>TOTAL", styles["center"], markup=True)],
         ["", "", "", "", _p("MATERIAL", styles["center"]), _p("MÃO DE OBRA", styles["center"]), _p("MATERIAL", styles["center"]), _p("MÃO DE OBRA", styles["center"]), ""],
@@ -97,24 +115,57 @@ def _items_table(quote: Quote, styles):
         ("TOPPADDING", (0, 0), (-1, -1), 2), ("BOTTOMPADDING", (0, 0), (-1, -1), 2),
     ]
     last_section = None
+    section_started = False
+    section_material = ZERO
+    section_labor = ZERO
+
+    def append_section_subtotal(add_separator: bool) -> None:
+        section_total = section_material + section_labor
+        rows.append(["", _p("SUB TOTAL", styles["bold"]), "", "", "", "", _p(brl(section_material), styles["right_bold"]), _p(brl(section_labor), styles["right_bold"]), _p(brl(section_total), styles["right_bold"])])
+        subtotal_row = len(rows) - 1
+        commands.extend([("SPAN", (1, subtotal_row), (5, subtotal_row)), ("BACKGROUND", (6, subtotal_row), (8, subtotal_row), TOTAL), ("LINEABOVE", (0, subtotal_row), (-1, subtotal_row), 1.0, BLACK)])
+        if add_separator:
+            rows.append([Spacer(1, 2 * mm), "", "", "", "", "", "", "", ""])
+            separator_row = len(rows) - 1
+            commands.extend([("SPAN", (0, separator_row), (-1, separator_row)), ("TOPPADDING", (0, separator_row), (-1, separator_row), 0), ("BOTTOMPADDING", (0, separator_row), (-1, separator_row), 0)])
+
     for item in quote.items:
-        if item.section and item.section != last_section:
-            rows.append([_p(item.section, styles["section"]), "", "", "", "", "", "", "", ""])
+        if item.is_section:
+            if section_started:
+                append_section_subtotal(add_separator=True)
+            rows.append([_p(item.section_number, styles["center_bold"]), _p(item.section, styles["section"]), "", "", "", "", "", "", ""])
             index = len(rows) - 1
-            commands.extend([("SPAN", (0, index), (-1, index)), ("BACKGROUND", (0, index), (-1, index), LIGHT), ("LINEABOVE", (0, index), (-1, index), 0.7, BLACK)])
-            last_section = item.section
-        description = f"{item.title}\n{item.description}" if item.description else item.title
+            commands.extend([("SPAN", (1, index), (-1, index)), ("BACKGROUND", (0, index), (-1, index), LIGHT), ("LINEABOVE", (0, index), (-1, index), 0.7, BLACK)])
+            last_section = (item.section_number, item.section)
+            section_started = True
+            section_material = ZERO
+            section_labor = ZERO
+            continue
+        section = (item.section_number, item.section)
+        if item.section and section != last_section:
+            if section_started:
+                append_section_subtotal(add_separator=True)
+            rows.append([_p(item.section_number, styles["center_bold"]), _p(item.section, styles["section"]), "", "", "", "", "", "", ""])
+            index = len(rows) - 1
+            commands.extend([("SPAN", (1, index), (-1, index)), ("BACKGROUND", (0, index), (-1, index), LIGHT), ("LINEABOVE", (0, index), (-1, index), 0.7, BLACK)])
+            last_section = section
+            section_started = True
+            section_material = ZERO
+            section_labor = ZERO
+        elif not section_started:
+            section_started = True
+        description = "\n".join(part for part in (item.title, item.description) if part)
         rows.append([
-            _p(item.number, styles["center"]), _p(description, styles["body"], bold_first=True), _p(item.unit, styles["center"]),
+            _p(item.number, styles["center"]), _p(description, styles["body"]), _p(item.unit, styles["center"]),
             _p(decimal_text(item.quantity), styles["center"]), _p(brl(item.material_unit), styles["center"]),
             _p(brl(item.labor_unit), styles["center"]), _p(brl(item.material_total), styles["center"]),
             _p(brl(item.labor_total), styles["center"]), _p(brl(item.total), styles["right_bold"]),
         ])
+        section_material += item.material_total
+        section_labor += item.labor_total
         commands.append(("BACKGROUND", (8, len(rows) - 1), (8, len(rows) - 1), TOTAL))
-    rows.append(["", _p("SUB TOTAL", styles["bold"]), "", "", "", "", _p(brl(quote.material_total), styles["right_bold"]), _p(brl(quote.labor_total), styles["right_bold"]), _p(brl(quote.total), styles["right_bold"])])
-    subtotal_row = len(rows) - 1
-    commands.extend([("SPAN", (1, subtotal_row), (5, subtotal_row)), ("BACKGROUND", (6, subtotal_row), (8, subtotal_row), TOTAL), ("LINEABOVE", (0, subtotal_row), (-1, subtotal_row), 1.0, BLACK)])
-    table = LongTable(rows, colWidths=widths, repeatRows=2, splitByRow=1)
+    append_section_subtotal(add_separator=False)
+    table = LongTable(rows, colWidths=ITEM_TABLE_WIDTHS, repeatRows=2, splitByRow=1)
     table.setStyle(TableStyle(commands))
     return table
 
@@ -122,11 +173,11 @@ def _items_table(quote: Quote, styles):
 def _responsibilities(quote: Quote, styles):
     def box(title, values):
         rows = [[_p(title, styles["center_bold"])]] + [[_p(f"{i}. {text}", styles["small"])] for i, text in enumerate(values, 1)]
-        table = Table(rows, colWidths=[132 * mm])
+        table = Table(rows, colWidths=[RESPONSIBILITY_WIDTH])
         table.setStyle(TableStyle([("BACKGROUND", (0, 0), (-1, 0), HEADER), ("BOX", (0, 0), (-1, -1), 0.7, BLACK), ("GRID", (0, 0), (-1, -1), 0.35, BLACK), ("LEFTPADDING", (0, 0), (-1, -1), 2), ("RIGHTPADDING", (0, 0), (-1, -1), 2), ("TOPPADDING", (0, 0), (-1, -1), 2), ("BOTTOMPADDING", (0, 0), (-1, -1), 2)]))
         return table
     contractor_title = f"Responsabilidades da {quote.company.name}:"
-    outer = Table([[box("Responsabilidades da CONTRATANTE:", quote.client_responsibilities), box(contractor_title, quote.contractor_responsibilities)]], colWidths=[137 * mm, 137 * mm])
+    outer = Table([[box("Responsabilidades da CONTRATANTE:", quote.client_responsibilities), "", box(contractor_title, quote.contractor_responsibilities)]], colWidths=[RESPONSIBILITY_WIDTH, RESPONSIBILITY_GAP, RESPONSIBILITY_WIDTH])
     outer.setStyle(TableStyle([("VALIGN", (0, 0), (-1, -1), "TOP"), ("LEFTPADDING", (0, 0), (-1, -1), 0), ("RIGHTPADDING", (0, 0), (-1, -1), 0)]))
     return outer
 
@@ -159,13 +210,13 @@ def export_pdf(quote: Quote, target: str | Path, logo_path: str | Path | None = 
         canvas.restoreState()
 
     story = [_header(quote, styles, logo), _items_table(quote, styles), Spacer(1, 4 * mm)]
-    story.append(Table([["", _p("TOTAL ACUMULADO", styles["bold"]), _p(brl(quote.material_total), styles["right_bold"]), _p(brl(quote.labor_total), styles["right_bold"]), _p(brl(quote.total), styles["right_bold"])]], colWidths=[12 * mm, 165 * mm, 32 * mm, 32 * mm, 36 * mm], style=TableStyle([("BOX", (0, 0), (-1, -1), 1.0, BLACK), ("BACKGROUND", (2, 0), (-1, -1), TOTAL), ("VALIGN", (0, 0), (-1, -1), "MIDDLE"), ("LEFTPADDING", (0, 0), (-1, -1), 2), ("RIGHTPADDING", (0, 0), (-1, -1), 2)])))
+    story.append(Table([["", _p("TOTAL ACUMULADO", styles["bold"]), _p(brl(quote.material_total), styles["right_bold"]), _p(brl(quote.labor_total), styles["right_bold"]), _p(brl(quote.total), styles["right_bold"])]], colWidths=ACCUMULATED_TOTAL_WIDTHS, style=TableStyle(ACCUMULATED_TOTAL_STYLE)))
     story.extend([Spacer(1, 5 * mm), _responsibilities(quote, styles), Spacer(1, 5 * mm), _commercial(quote, styles), Spacer(1, 3 * mm)])
     signature = Table([
         [_p(quote.notes, styles["body"]), ""],
         ["", _p("______________________________", styles["center"])],
         ["", _p(f"<b>{escape(quote.company.signer_name)}</b><br/>{escape(quote.company.signer_email)}<br/>{escape(quote.company.signer_title)}<br/>{escape(quote.company.signer_phone)}", styles["center"], markup=True)],
-    ], colWidths=[190 * mm, 87 * mm], rowHeights=[12 * mm, 7 * mm, 18 * mm])
+    ], colWidths=[190 * mm, 87 * mm], rowHeights=[10 * mm, 6 * mm, 15 * mm])
     signature.setStyle(TableStyle([("BOX", (0, 0), (-1, -1), 0.8, BLACK), ("SPAN", (0, 0), (0, 2)), ("VALIGN", (0, 0), (-1, -1), "TOP"), ("LEFTPADDING", (0, 0), (-1, -1), 2), ("RIGHTPADDING", (0, 0), (-1, -1), 2)]))
     story.append(KeepTogether(signature))
     doc.build(story, onFirstPage=page, onLaterPages=page)

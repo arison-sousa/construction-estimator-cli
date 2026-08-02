@@ -1,7 +1,9 @@
 from __future__ import annotations
 
 import argparse
+import os
 from pathlib import Path
+import subprocess
 import sys
 
 from .models import Item, Quote, brl, money, number
@@ -73,16 +75,108 @@ def edit_company(quote: Quote) -> None:
 
 def input_item(existing: Item | None = None) -> Item:
     old = existing or Item(number="", title="", description="")
+    description = "\n".join(part for part in (old.title, old.description) if part)
     return Item(
-        number=ask("Número do item", old.number),
-        section=ask("Seção/grupo (opcional)", old.section),
-        title=ask("Título", old.title),
-        description=ask_multiline("Descrição", old.description),
+        section_number=old.section_number,
+        section=old.section,
+        number=old.number,
+        title="",
+        description=ask_multiline("Descrição", description),
         unit=ask("Unidade", old.unit),
         quantity=ask_decimal("Quantidade", old.quantity),
         material_unit=ask_money("Material unitário", old.material_unit),
         labor_unit=ask_money("Mão de obra unitária", old.labor_unit),
     )
+
+
+def input_section(existing: Item | None = None) -> Item:
+    old = existing or Item(number="", title="", description="", is_section=True)
+    return Item(
+        number="",
+        title="",
+        description="",
+        section_number=old.section_number,
+        section=ask("Título da seção", old.section),
+        is_section=True,
+    )
+
+
+def section_positions(quote: Quote) -> list[int]:
+    return [index for index, item in enumerate(quote.items) if item.is_section]
+
+
+def choose_section(quote: Quote) -> int | None:
+    positions = section_positions(quote)
+    if not positions:
+        return None
+    if len(positions) == 1:
+        position = positions[0]
+        section = quote.items[position]
+        print(f"Seção: {section.section_number} {section.section}")
+        return position
+
+    print("\nEscolha a seção:")
+    for choice, position in enumerate(positions, 1):
+        section = quote.items[position]
+        print(f"{choice}. {section.section_number} {section.section}")
+    try:
+        choice = int(ask("Número da seção"))
+    except ValueError:
+        print("Seção inválida.")
+        return None
+    if not 1 <= choice <= len(positions):
+        print(f"Seção inexistente. Digite um número entre 1 e {len(positions)}.")
+        return None
+    return positions[choice - 1]
+
+
+def add_section_with_item(quote: Quote) -> None:
+    print("\nNova seção")
+    section = input_section()
+    print("\nPrimeiro item da seção")
+    item = input_item()
+    quote.items.extend([section, item])
+    quote.normalize_sections()
+
+
+def add_item_to_section(quote: Quote) -> None:
+    section_index = choose_section(quote)
+    if section_index is None:
+        print("Nenhuma seção cadastrada. Crie a seção e seu primeiro item.")
+        add_section_with_item(quote)
+        return
+
+    insertion_index = section_index + 1
+    while insertion_index < len(quote.items) and not quote.items[insertion_index].is_section:
+        insertion_index += 1
+    quote.items.insert(insertion_index, input_item())
+    quote.renumber()
+
+
+def remove_row(quote: Quote, index: int) -> None:
+    row = quote.items[index]
+    if row.is_section:
+        end = index + 1
+        while end < len(quote.items) and not quote.items[end].is_section:
+            end += 1
+        count = end - index - 1
+        if ask(f"Remover a seção e seus {count} item(ns)? s/N", "N").lower() == "s":
+            del quote.items[index:end]
+            quote.renumber()
+        return
+
+    section_index = index - 1
+    while section_index >= 0 and not quote.items[section_index].is_section:
+        section_index -= 1
+    next_is_section = index + 1 >= len(quote.items) or quote.items[index + 1].is_section
+    only_item = section_index >= 0 and section_index + 1 == index and next_is_section
+    if only_item:
+        if ask("Este é o único item. Remover o item e sua seção? s/N", "N").lower() == "s":
+            del quote.items[section_index:index + 1]
+            quote.renumber()
+    elif ask("Confirmar remoção? s/N", "N").lower() == "s":
+        quote.items.pop(index)
+        quote.renumber()
 
 
 def print_summary(quote: Quote) -> None:
@@ -91,7 +185,11 @@ def print_summary(quote: Quote) -> None:
     if not quote.items:
         print("Nenhum item cadastrado.")
     for index, item in enumerate(quote.items, 1):
-        print(f"{index:>2}. {item.number:<6} {item.title[:48]:<48} {brl(item.total):>16}")
+        if item.is_section:
+            print(f"{index:>2}. [SEÇÃO] {item.section_number} {item.section}")
+            continue
+        service = (item.description or item.title).splitlines()[0] if (item.description or item.title) else ""
+        print(f"{index:>2}. {item.number:<6} {service[:48]:<48} {brl(item.total):>16}")
     print(f"Material: {brl(quote.material_total)}")
     print(f"Mão de obra: {brl(quote.labor_total)}")
     print(f"TOTAL: {brl(quote.total)}\n")
@@ -124,29 +222,62 @@ def edit_list(title: str, values: list[str]) -> None:
         values[:] = replacement
 
 
+def ask_item_index(item_count: int) -> int | None:
+    """Ask for a displayed row number and return its zero-based index."""
+    answer = ask("Número da linha")
+    try:
+        row_number = int(answer)
+    except ValueError:
+        print("Número de linha inválido. Digite o número mostrado à esquerda, por exemplo: 1.")
+        return None
+
+    if not 1 <= row_number <= item_count:
+        print(f"Linha inexistente. Digite um número entre 1 e {item_count}.")
+        return None
+    return row_number - 1
+
+
+def open_pdf(path: Path) -> None:
+    """Open a generated PDF in the operating system's default viewer."""
+    try:
+        if sys.platform == "darwin":
+            subprocess.Popen(["open", str(path)], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+        elif sys.platform.startswith("win"):
+            os.startfile(path)  # type: ignore[attr-defined]
+        else:
+            subprocess.Popen(["xdg-open", str(path)], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    except OSError as exc:
+        print(f"Aviso: o PDF foi gerado, mas não foi possível abri-lo automaticamente: {exc}")
+
+
 def editor(quote: Quote, path: Path) -> int:
     while True:
+        quote.renumber()
         print_summary(quote)
-        print("[1] Dados da proposta  [2] Adicionar item  [3] Editar item  [4] Remover item")
+        print("[1] Dados da proposta  [2] Adicionar item  [3] Editar linha  [4] Remover linha")
         print("[5] Condições  [6] Responsabilidades  [7] Salvar  [8] Salvar e gerar PDF")
-        print("[9] Dados da empresa  [0] Sair")
+        print("[9] Dados da empresa  [10] Adicionar seção + item  [0] Sair")
         choice = input("> ").strip()
         if choice == "1":
             edit_info(quote)
         elif choice == "2":
-            quote.items.append(input_item())
+            add_item_to_section(quote)
         elif choice == "3":
             if not quote.items:
                 continue
-            index = int(ask("Número da linha")) - 1
-            if 0 <= index < len(quote.items):
-                quote.items[index] = input_item(quote.items[index])
+            index = ask_item_index(len(quote.items))
+            if index is not None:
+                if quote.items[index].is_section:
+                    quote.items[index] = input_section(quote.items[index])
+                else:
+                    quote.items[index] = input_item(quote.items[index])
+                quote.renumber()
         elif choice == "4":
             if not quote.items:
                 continue
-            index = int(ask("Número da linha")) - 1
-            if 0 <= index < len(quote.items) and ask("Confirmar remoção? s/N", "N").lower() == "s":
-                quote.items.pop(index)
+            index = ask_item_index(len(quote.items))
+            if index is not None:
+                remove_row(quote, index)
         elif choice == "5":
             edit_terms(quote)
         elif choice == "6":
@@ -160,8 +291,11 @@ def editor(quote: Quote, path: Path) -> int:
             pdf_path = path.with_suffix(".pdf")
             export_pdf(quote, pdf_path, DEFAULT_LOGO)
             print(f"Salvo em {path}\nPDF gerado em {pdf_path}")
+            open_pdf(pdf_path)
         elif choice == "9":
             edit_company(quote)
+        elif choice == "10":
+            add_section_with_item(quote)
         elif choice == "0":
             if ask("Salvar antes de sair? S/n", "S").lower() != "n":
                 quote.save(path)
@@ -227,6 +361,7 @@ def main(argv: list[str] | None = None) -> int:
             output = Path(args.saida).expanduser() if args.saida else Path(args.arquivo).with_suffix(".pdf")
             export_pdf(quote, output, DEFAULT_LOGO)
             print(f"PDF gerado em {output}")
+            open_pdf(output)
             return 0
         if args.command == "exemplo":
             directory = Path(args.diretorio).expanduser()
@@ -236,6 +371,7 @@ def main(argv: list[str] | None = None) -> int:
             quote.save(json_path)
             export_pdf(quote, pdf_path, DEFAULT_LOGO)
             print(f"Exemplo JSON: {json_path}\nExemplo PDF: {pdf_path}")
+            open_pdf(pdf_path)
             return 0
     except (OSError, ValueError, KeyError) as exc:
         print(f"Erro: {exc}", file=sys.stderr)

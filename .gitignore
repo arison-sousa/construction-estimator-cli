@@ -4,3 +4,10 @@ __pycache__/
 output/
 tmp/
 
+# Ignore everything inside output, but keep the folder
+output/*
+!output/.gitkeep
+
+# Ignore everything inside propostas, but keep the folder
+propostas/*
+!propostas/.gitkeep

@@ -86,6 +86,8 @@ class Item:
     material_unit: Decimal = ZERO
     labor_unit: Decimal = ZERO
     section: str = ""
+    section_number: str = ""
+    is_section: bool = False
 
     @property
     def material_total(self) -> Decimal:
@@ -124,9 +126,14 @@ DEFAULT_CONTRACTOR_RESPONSIBILITIES = [
 ]
 
 DEFAULT_TAXES = (
-    "Sobre a mão de obra: INSS incluso no orçamento. ISS incluso no orçamento. "
-    "Sobre material faturado: PIS 0,65% incluso; COFINS 3,0% incluso; "
-    "IRPJ 1,20% incluso; ICMS e IPI 0% para construção civil isenta."
+    "Sobre a Mão de Obra:\n"
+    "INSS = Incluso no orçamento\n"
+    "ISS = Incluso no orçamento\n"
+    "Sobre material faturado pela DEBASE CONSTRUTORA LTDA:\n"
+    "PIS = 0,65% Incluso no orçamento\n"
+    "COFINS = 3,0% Incluso no orçamento\n"
+    "IRPJ: 1,20% Incluso no orçamento\n"
+    "ICMS, IPI = 0% Construção civil - isento"
 )
 
 
@@ -158,6 +165,56 @@ class Quote:
     def total(self) -> Decimal:
         return self.material_total + self.labor_total
 
+    def normalize_sections(self) -> None:
+        """Convert legacy item-level sections into ordered section rows."""
+        normalized: list[Item] = []
+        active_section: tuple[str, str] | None = None
+        for item in self.items:
+            if item.is_section:
+                normalized.append(item)
+                active_section = (item.section_number, item.section)
+                continue
+            if item.section:
+                section = (item.section_number, item.section)
+                if section != active_section:
+                    normalized.append(
+                        Item(
+                            number="",
+                            title="",
+                            description="",
+                            section_number=item.section_number,
+                            section=item.section,
+                            is_section=True,
+                        )
+                    )
+                    active_section = section
+                item.section_number = ""
+                item.section = ""
+            normalized.append(item)
+
+        # A section header is only valid when at least one item follows it.
+        self.items = [
+            item
+            for index, item in enumerate(normalized)
+            if not item.is_section
+            or (index + 1 < len(normalized) and not normalized[index + 1].is_section)
+        ]
+        self.renumber()
+
+    def renumber(self) -> None:
+        """Number sections and their child items according to display order."""
+        section_number = 0
+        item_number = 0
+        for item in self.items:
+            if item.is_section:
+                section_number += 1
+                item_number = 0
+                item.section_number = f"{section_number}.0"
+                continue
+            if section_number:
+                item_number += 1
+                item.number = f"{section_number}.{item_number}"
+
     def to_dict(self) -> dict[str, Any]:
         data = asdict(self)
         for item in data["items"]:
@@ -171,9 +228,12 @@ class Quote:
         values["company"] = Company(**values.get("company", {}))
         values["info"] = QuoteInfo(**values.get("info", {}))
         values["items"] = [Item.from_dict(item) for item in values.get("items", [])]
-        return cls(**values)
+        quote = cls(**values)
+        quote.normalize_sections()
+        return quote
 
     def save(self, path: str | Path) -> Path:
+        self.normalize_sections()
         target = Path(path).expanduser()
         target.parent.mkdir(parents=True, exist_ok=True)
         target.write_text(json.dumps(self.to_dict(), ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
@@ -183,4 +243,3 @@ class Quote:
     def load(cls, path: str | Path) -> "Quote":
         source = Path(path).expanduser()
         return cls.from_dict(json.loads(source.read_text(encoding="utf-8")))
-
