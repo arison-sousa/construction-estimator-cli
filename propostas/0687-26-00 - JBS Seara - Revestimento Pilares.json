@@ -1,0 +1,85 @@
+{
+  "company": {
+    "name": "DEBASE CONSTRUTORA LTDA",
+    "tax_id": "30.884.014/0001-86",
+    "state_registration": "25.873.821-9",
+    "address": "Rua Jacutinga nº 449 Bairro Efapi",
+    "city": "Chapecó - SC",
+    "postal_code": "89.809-810",
+    "signer_name": "Ceser Kiefer",
+    "signer_title": "Diretor",
+    "signer_email": "comercial@debaseconstrutora.com.br",
+    "signer_phone": "(49) 99926-9847"
+  },
+  "info": {
+    "client": "JBS",
+    "location": "Seara",
+    "project": "Revestimento Pilares",
+    "contact": "Ricardo",
+    "city": "",
+    "proposal": "0687-26-00",
+    "proposal_number": 687,
+    "proposal_year": 2026,
+    "proposal_revision": 0,
+    "issue_date": "02/08/2026"
+  },
+  "items": [
+    {
+      "number": "",
+      "title": "",
+      "description": "",
+      "unit": "vb",
+      "quantity": "1",
+      "material_unit": "0.00",
+      "labor_unit": "0.00",
+      "section": "Revestimento Pilares",
+      "section_number": "1",
+      "is_section": true
+    },
+    {
+      "number": "1.1",
+      "title": "",
+      "description": "Fornecimento de material e mão de obra para realizar a demolição de uma\nparede em alvenaria de 18m2 e 20cm de espessura com revestimento\ncerâmico em ambos os lados.",
+      "unit": "vb",
+      "quantity": "1",
+      "material_unit": "2000.00",
+      "labor_unit": "5000.00",
+      "section": "",
+      "section_number": "",
+      "is_section": false
+    },
+    {
+      "number": "1.2",
+      "title": "",
+      "description": "Paredes de painel termoisolante\nFornecimento de todos os materiais, equipamentos, ferramentas, consumíveis e mão de obra necessários para a montagem de 86m2 de paredes para reconstrução da parede demolida alem de realizar o revestimento de 6 pilares em concreto armado.\n\nAs paredes e o forro deverão ser executados com painéis termoisolantes de PIR (Poliisocianurato) em aço inox de ambos os lados, com espessura de 100 mm, compostos por núcleo isolante de poliisocianurato e revestidos em ambas as faces com chapas de aço inox, marca MPB, Isoblock ou equivalente técnico aprovado pela fiscalização.",
+      "unit": "m2",
+      "quantity": "86",
+      "material_unit": "800.00",
+      "labor_unit": "500.00",
+      "section": "",
+      "section_number": "",
+      "is_section": false
+    }
+  ],
+  "client_responsibilities": [
+    "Liberar toda a área para execução dos serviços;",
+    "Acompanhar os serviços e fornecer definições quando necessário;",
+    "Deslocar interferências na execução dos serviços que não foram listadas na planilha do orçamento;",
+    "Fornecer água e energia elétrica (220/380 V) necessária para a execução dos serviços;",
+    "Permitir montagem do canteiro de obras próximo ao local dos serviços;"
+  ],
+  "contractor_responsibilities": [
+    "Fornecer todos os itens exigidos pela legislação trabalhista;",
+    "Fornecer material e mão de obra qualificada para execução dos serviços contratados;",
+    "Fornecer todos os equipamentos necessários para execução dos serviços contratados;",
+    "Zelar pela organização e limpeza da obra e do canteiro durante o andamento da mesma;"
+  ],
+  "validity": "15 dias",
+  "payment_terms": "-",
+  "freight": "CIF",
+  "start_deadline": "-",
+  "execution_deadline": "-",
+  "warranty": "-",
+  "taxes": "Sobre a Mão de Obra:\nINSS = Incluso no orçamento\nISS = Incluso no orçamento\nSobre material faturado pela DEBASE CONSTRUTORA LTDA:\nPIS = 0,65% Incluso no orçamento\nCOFINS = 3,0% Incluso no orçamento\nIRPJ: 1,20% Incluso no orçamento\nICMS, IPI = 0% Construção civil - isento",
+  "notes": "Atenciosamente,"
+}
