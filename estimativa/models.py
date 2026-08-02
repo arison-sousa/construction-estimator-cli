@@ -209,7 +209,7 @@ class Quote:
             if item.is_section:
                 section_number += 1
                 item_number = 0
-                item.section_number = f"{section_number}.0"
+                item.section_number = str(section_number)
                 continue
             if section_number:
                 item_number += 1

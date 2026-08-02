@@ -13,9 +13,12 @@ from estimativa.pdf_export import (
     ACCUMULATED_TOTAL_WIDTHS,
     BLACK,
     CONTENT_WIDTH,
+    HEADER,
     ITEM_TABLE_WIDTHS,
     RESPONSIBILITY_GAP,
     RESPONSIBILITY_WIDTH,
+    SIGNATURE_ROW_HEIGHTS,
+    SIGNATURE_STYLE,
     _items_table,
     _styles,
 )
@@ -30,6 +33,23 @@ class ModelTests(unittest.TestCase):
         self.assertEqual(Quote().taxes, DEFAULT_TAXES)
         self.assertEqual(len(DEFAULT_TAXES.splitlines()), 8)
         self.assertIn("DEBASE CONSTRUTORA LTDA", DEFAULT_TAXES)
+
+    def test_company_details_have_relaxed_line_spacing(self):
+        styles = _styles()
+        self.assertGreater(styles["company_details"].leading, styles["body"].leading)
+        self.assertEqual(styles["company_details"].leading, 10.5)
+
+    def test_item_table_typography_is_larger_than_supporting_text(self):
+        styles = _styles()
+        self.assertGreater(styles["item_body"].fontSize, styles["body"].fontSize)
+        self.assertEqual(
+            {styles[name].fontSize for name in ("item_body", "item_center", "item_bold", "item_right_bold", "item_section")},
+            {8.0},
+        )
+        self.assertEqual(
+            {styles[name].leading for name in ("item_body", "item_center", "item_bold", "item_right_bold", "item_section")},
+            {9.8},
+        )
 
     def test_totals_and_round_trip(self):
         quote = Quote(items=[Item("1", "Teste", "", "und", number("2"), money("10,50"), money("4"))])
@@ -48,7 +68,7 @@ class ModelTests(unittest.TestCase):
             title="",
             description="",
             section="Título da seção",
-            section_number="1.0",
+            section_number="1",
             is_section=True,
         )
         item = Item(
@@ -57,7 +77,7 @@ class ModelTests(unittest.TestCase):
             description="Descrição direta",
         )
         table = _items_table(Quote(items=[section, item]), _styles())
-        self.assertEqual(table._cellvalues[2][0].getPlainText(), "1.0")
+        self.assertEqual(table._cellvalues[2][0].getPlainText(), "1")
         self.assertEqual(table._cellvalues[2][1].getPlainText(), "Título da seção")
         self.assertEqual(table._cellvalues[3][1].getPlainText(), "Descrição direta")
         self.assertEqual(Quote(items=[section, item]).total, item.total)
@@ -79,7 +99,7 @@ class ModelTests(unittest.TestCase):
         quote.normalize_sections()
         self.assertEqual(
             [(row.section_number if row.is_section else row.number) for row in quote.items],
-            ["1.0", "1.1", "1.2", "2.0", "2.1"],
+            ["1", "1.1", "1.2", "2", "2.1"],
         )
 
     def test_empty_section_is_removed(self):
@@ -92,8 +112,32 @@ class ModelTests(unittest.TestCase):
         self.assertEqual(ACCUMULATED_TOTAL_WIDTHS[2:], ITEM_TABLE_WIDTHS[6:])
         self.assertIn(("GRID", (2, 0), (-1, 0), 0.45, BLACK), ACCUMULATED_TOTAL_STYLE)
 
+    def test_final_total_column_is_only_slightly_wider_than_price_columns(self):
+        price_columns = ITEM_TABLE_WIDTHS[4:8]
+        final_total = ITEM_TABLE_WIDTHS[8]
+        self.assertTrue(all(width == price_columns[0] for width in price_columns))
+        self.assertGreater(final_total, price_columns[0])
+        self.assertLessEqual(final_total, price_columns[0] * 1.15)
+
+    def test_grouped_price_headers_omit_unwanted_dividers(self):
+        table = _items_table(Quote(), _styles())
+        line_commands = [command[:5] for command in table._linecmds]
+        self.assertIn(("GRID", (0, 2), (-1, -1), 0.45, BLACK), line_commands)
+        self.assertIn(("LINEBELOW", (0, 1), (-1, 1), 0.45, BLACK), line_commands)
+        self.assertFalse(any(command[4] == HEADER for command in line_commands))
+        for column in (1, 2, 3, 4, 6, 8):
+            self.assertIn(("LINEBEFORE", (column, 0), (column, 1), 0.45, BLACK), line_commands)
+        for column in (5, 7):
+            self.assertNotIn(("LINEBEFORE", (column, 0), (column, 1), 0.45, BLACK), line_commands)
+
     def test_responsibility_boxes_align_with_page_content_edges(self):
         self.assertAlmostEqual(RESPONSIBILITY_WIDTH * 2 + RESPONSIBILITY_GAP, CONTENT_WIDTH)
+
+    def test_signature_line_sits_close_to_signer_name(self):
+        self.assertAlmostEqual(sum(SIGNATURE_ROW_HEIGHTS), 31 * 72 / 25.4)
+        self.assertIn(("TOPPADDING", (1, 1), (1, 1), 0), SIGNATURE_STYLE)
+        self.assertIn(("BOTTOMPADDING", (1, 1), (1, 1), 0), SIGNATURE_STYLE)
+        self.assertIn(("TOPPADDING", (1, 2), (1, 2), 0), SIGNATURE_STYLE)
 
     def test_each_section_has_its_own_subtotal_and_separator(self):
         quote = Quote(items=[
@@ -108,12 +152,17 @@ class ModelTests(unittest.TestCase):
             row[1].getPlainText() if hasattr(row[1], "getPlainText") else ""
             for row in table._cellvalues
         ]
-        subtotal_rows = [index for index, label in enumerate(labels) if label == "SUB TOTAL"]
+        subtotal_rows = [index for index, label in enumerate(labels) if label == "Subtotal"]
         self.assertEqual(len(subtotal_rows), 2)
         self.assertEqual(table._cellvalues[subtotal_rows[0]][6].getPlainText(), "R$ 20,00")
         self.assertEqual(table._cellvalues[subtotal_rows[0]][7].getPlainText(), "R$ 10,00")
         self.assertEqual(labels[subtotal_rows[0] + 2], "Segunda")
         self.assertEqual(quote.total, money("40"))
+        table.wrap(CONTENT_WIDTH, 10000)
+        subtotal_height = table._rowHeights[subtotal_rows[0]]
+        self.assertAlmostEqual(subtotal_height, table._rowHeights[subtotal_rows[0] - 1])
+        self.assertAlmostEqual(subtotal_height, table._rowHeights[subtotal_rows[0] - 2])
+        self.assertAlmostEqual(table._rowHeights[subtotal_rows[0] + 1], subtotal_height)
 
     def test_item_row_rejects_item_code_without_crashing(self):
         output = StringIO()

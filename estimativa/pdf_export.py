@@ -28,7 +28,7 @@ HEADER = colors.HexColor("#c9c9c9")
 LIGHT = colors.HexColor("#eeeeee")
 TOTAL = colors.HexColor("#d9d9d9")
 BLUE = colors.HexColor("#29465b")
-ITEM_TABLE_WIDTHS = [12 * mm, 105 * mm, 14 * mm, 15 * mm, 25 * mm, 25 * mm, 25 * mm, 25 * mm, 31 * mm]
+ITEM_TABLE_WIDTHS = [12 * mm, 108 * mm, 14 * mm, 15 * mm, 25 * mm, 25 * mm, 25 * mm, 25 * mm, 28 * mm]
 ACCUMULATED_TOTAL_WIDTHS = [
     ITEM_TABLE_WIDTHS[0],
     sum(ITEM_TABLE_WIDTHS[1:6]),
@@ -39,6 +39,10 @@ ACCUMULATED_TOTAL_WIDTHS = [
 CONTENT_WIDTH = sum(ITEM_TABLE_WIDTHS)
 RESPONSIBILITY_GAP = 5 * mm
 RESPONSIBILITY_WIDTH = (CONTENT_WIDTH - RESPONSIBILITY_GAP) / 2
+ITEM_ROW_LEADING = 9.8
+ITEM_ROW_VERTICAL_PADDING = 2
+ITEM_ROW_HEIGHT = ITEM_ROW_LEADING + 2 * ITEM_ROW_VERTICAL_PADDING
+SECTION_GAP_HEIGHT = ITEM_ROW_HEIGHT
 ACCUMULATED_TOTAL_STYLE = [
     ("BOX", (0, 0), (-1, -1), 1.0, BLACK),
     ("GRID", (2, 0), (-1, 0), 0.45, BLACK),
@@ -46,6 +50,17 @@ ACCUMULATED_TOTAL_STYLE = [
     ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
     ("LEFTPADDING", (0, 0), (-1, -1), 2),
     ("RIGHTPADDING", (0, 0), (-1, -1), 2),
+]
+SIGNATURE_ROW_HEIGHTS = [12 * mm, 4 * mm, 15 * mm]
+SIGNATURE_STYLE = [
+    ("BOX", (0, 0), (-1, -1), 0.8, BLACK),
+    ("SPAN", (0, 0), (0, 2)),
+    ("VALIGN", (0, 0), (-1, -1), "TOP"),
+    ("LEFTPADDING", (0, 0), (-1, -1), 2),
+    ("RIGHTPADDING", (0, 0), (-1, -1), 2),
+    ("TOPPADDING", (1, 1), (1, 1), 0),
+    ("BOTTOMPADDING", (1, 1), (1, 1), 0),
+    ("TOPPADDING", (1, 2), (1, 2), 0),
 ]
 
 
@@ -59,7 +74,14 @@ def _styles():
         "center_bold": ParagraphStyle("center_bold", parent=styles["Normal"], fontName="Helvetica-Bold", fontSize=7.1, leading=8.4, alignment=TA_CENTER),
         "right_bold": ParagraphStyle("right_bold", parent=styles["Normal"], fontName="Helvetica-Bold", fontSize=7.1, leading=8.4, alignment=TA_RIGHT),
         "company": ParagraphStyle("company", parent=styles["Normal"], fontName="Helvetica-Bold", fontSize=8.5, leading=10),
+        "company_details": ParagraphStyle("company_details", parent=styles["Normal"], fontName="Helvetica", fontSize=7.2, leading=10.5, textColor=BLACK),
         "section": ParagraphStyle("section", parent=styles["Normal"], fontName="Helvetica-Bold", fontSize=7.5, leading=9),
+        "item_body": ParagraphStyle("item_body", parent=styles["Normal"], fontName="Helvetica", fontSize=8.0, leading=ITEM_ROW_LEADING, textColor=BLACK),
+        "item_center": ParagraphStyle("item_center", parent=styles["Normal"], fontName="Helvetica", fontSize=8.0, leading=ITEM_ROW_LEADING, alignment=TA_CENTER),
+        "item_center_bold": ParagraphStyle("item_center_bold", parent=styles["Normal"], fontName="Helvetica-Bold", fontSize=8.0, leading=ITEM_ROW_LEADING, alignment=TA_CENTER),
+        "item_bold": ParagraphStyle("item_bold", parent=styles["Normal"], fontName="Helvetica-Bold", fontSize=8.0, leading=ITEM_ROW_LEADING, textColor=BLACK),
+        "item_right_bold": ParagraphStyle("item_right_bold", parent=styles["Normal"], fontName="Helvetica-Bold", fontSize=8.0, leading=ITEM_ROW_LEADING, alignment=TA_RIGHT),
+        "item_section": ParagraphStyle("item_section", parent=styles["Normal"], fontName="Helvetica-Bold", fontSize=8.0, leading=ITEM_ROW_LEADING),
     }
 
 
@@ -82,7 +104,7 @@ def _header(quote: Quote, styles, logo_path: Path | None):
     company_text = _p(
         f"<b>{escape(company.name)}</b><br/>CNPJ {escape(company.tax_id)} &nbsp; INS ESTADUAL {escape(company.state_registration)}"
         f"<br/>{escape(company.address)}<br/>{escape(company.city)}<br/>CEP {escape(company.postal_code)}",
-        styles["body"], markup=True,
+        styles["company_details"], markup=True,
     )
     info = quote.info
     details = Table(
@@ -108,9 +130,13 @@ def _items_table(quote: Quote, styles):
     ]
     commands = [
         ("BACKGROUND", (0, 0), (-1, 1), HEADER), ("BOX", (0, 0), (-1, -1), 1.0, BLACK),
-        ("GRID", (0, 0), (-1, -1), 0.45, BLACK), ("SPAN", (0, 0), (0, 1)), ("SPAN", (1, 0), (1, 1)),
+        ("GRID", (0, 2), (-1, -1), 0.45, BLACK), ("LINEBELOW", (0, 1), (-1, 1), 0.45, BLACK),
+        ("SPAN", (0, 0), (0, 1)), ("SPAN", (1, 0), (1, 1)),
         ("SPAN", (2, 0), (2, 1)), ("SPAN", (3, 0), (3, 1)), ("SPAN", (4, 0), (5, 0)),
         ("SPAN", (6, 0), (7, 0)), ("SPAN", (8, 0), (8, 1)), ("VALIGN", (0, 0), (-1, -1), "MIDDLE"),
+        ("LINEBEFORE", (1, 0), (1, 1), 0.45, BLACK), ("LINEBEFORE", (2, 0), (2, 1), 0.45, BLACK),
+        ("LINEBEFORE", (3, 0), (3, 1), 0.45, BLACK), ("LINEBEFORE", (4, 0), (4, 1), 0.45, BLACK),
+        ("LINEBEFORE", (6, 0), (6, 1), 0.45, BLACK), ("LINEBEFORE", (8, 0), (8, 1), 0.45, BLACK),
         ("LEFTPADDING", (0, 0), (-1, -1), 2), ("RIGHTPADDING", (0, 0), (-1, -1), 2),
         ("TOPPADDING", (0, 0), (-1, -1), 2), ("BOTTOMPADDING", (0, 0), (-1, -1), 2),
     ]
@@ -121,21 +147,33 @@ def _items_table(quote: Quote, styles):
 
     def append_section_subtotal(add_separator: bool) -> None:
         section_total = section_material + section_labor
-        rows.append(["", _p("SUB TOTAL", styles["bold"]), "", "", "", "", _p(brl(section_material), styles["right_bold"]), _p(brl(section_labor), styles["right_bold"]), _p(brl(section_total), styles["right_bold"])])
+        rows.append(["", _p("Subtotal", styles["item_bold"]), "", "", "", "", _p(brl(section_material), styles["item_right_bold"]), _p(brl(section_labor), styles["item_right_bold"]), _p(brl(section_total), styles["item_right_bold"])])
         subtotal_row = len(rows) - 1
-        commands.extend([("SPAN", (1, subtotal_row), (5, subtotal_row)), ("BACKGROUND", (6, subtotal_row), (8, subtotal_row), TOTAL), ("LINEABOVE", (0, subtotal_row), (-1, subtotal_row), 1.0, BLACK)])
+        commands.extend([
+            ("SPAN", (1, subtotal_row), (5, subtotal_row)), ("BACKGROUND", (6, subtotal_row), (8, subtotal_row), TOTAL),
+            ("LINEABOVE", (0, subtotal_row), (-1, subtotal_row), 1.0, BLACK),
+            ("FONTSIZE", (0, subtotal_row), (5, subtotal_row), 8.0), ("LEADING", (0, subtotal_row), (5, subtotal_row), ITEM_ROW_LEADING),
+        ])
         if add_separator:
-            rows.append([Spacer(1, 2 * mm), "", "", "", "", "", "", "", ""])
+            rows.append([Spacer(1, SECTION_GAP_HEIGHT), "", "", "", "", "", "", "", ""])
             separator_row = len(rows) - 1
-            commands.extend([("SPAN", (0, separator_row), (-1, separator_row)), ("TOPPADDING", (0, separator_row), (-1, separator_row), 0), ("BOTTOMPADDING", (0, separator_row), (-1, separator_row), 0)])
+            commands.extend([
+                ("SPAN", (0, separator_row), (-1, separator_row)),
+                ("TOPPADDING", (0, separator_row), (-1, separator_row), 0), ("BOTTOMPADDING", (0, separator_row), (-1, separator_row), 0),
+                ("FONTSIZE", (0, separator_row), (-1, separator_row), 1.0), ("LEADING", (0, separator_row), (-1, separator_row), SECTION_GAP_HEIGHT),
+            ])
 
     for item in quote.items:
         if item.is_section:
             if section_started:
                 append_section_subtotal(add_separator=True)
-            rows.append([_p(item.section_number, styles["center_bold"]), _p(item.section, styles["section"]), "", "", "", "", "", "", ""])
+            rows.append([_p(item.section_number, styles["item_center_bold"]), _p(item.section, styles["item_section"]), "", "", "", "", "", "", ""])
             index = len(rows) - 1
-            commands.extend([("SPAN", (1, index), (-1, index)), ("BACKGROUND", (0, index), (-1, index), LIGHT), ("LINEABOVE", (0, index), (-1, index), 0.7, BLACK)])
+            commands.extend([
+                ("SPAN", (1, index), (-1, index)), ("BACKGROUND", (0, index), (-1, index), LIGHT),
+                ("LINEABOVE", (0, index), (-1, index), 0.7, BLACK),
+                ("FONTSIZE", (0, index), (-1, index), 8.0), ("LEADING", (0, index), (-1, index), ITEM_ROW_LEADING),
+            ])
             last_section = (item.section_number, item.section)
             section_started = True
             section_material = ZERO
@@ -145,9 +183,13 @@ def _items_table(quote: Quote, styles):
         if item.section and section != last_section:
             if section_started:
                 append_section_subtotal(add_separator=True)
-            rows.append([_p(item.section_number, styles["center_bold"]), _p(item.section, styles["section"]), "", "", "", "", "", "", ""])
+            rows.append([_p(item.section_number, styles["item_center_bold"]), _p(item.section, styles["item_section"]), "", "", "", "", "", "", ""])
             index = len(rows) - 1
-            commands.extend([("SPAN", (1, index), (-1, index)), ("BACKGROUND", (0, index), (-1, index), LIGHT), ("LINEABOVE", (0, index), (-1, index), 0.7, BLACK)])
+            commands.extend([
+                ("SPAN", (1, index), (-1, index)), ("BACKGROUND", (0, index), (-1, index), LIGHT),
+                ("LINEABOVE", (0, index), (-1, index), 0.7, BLACK),
+                ("FONTSIZE", (0, index), (-1, index), 8.0), ("LEADING", (0, index), (-1, index), ITEM_ROW_LEADING),
+            ])
             last_section = section
             section_started = True
             section_material = ZERO
@@ -156,10 +198,10 @@ def _items_table(quote: Quote, styles):
             section_started = True
         description = "\n".join(part for part in (item.title, item.description) if part)
         rows.append([
-            _p(item.number, styles["center"]), _p(description, styles["body"]), _p(item.unit, styles["center"]),
-            _p(decimal_text(item.quantity), styles["center"]), _p(brl(item.material_unit), styles["center"]),
-            _p(brl(item.labor_unit), styles["center"]), _p(brl(item.material_total), styles["center"]),
-            _p(brl(item.labor_total), styles["center"]), _p(brl(item.total), styles["right_bold"]),
+            _p(item.number, styles["item_center"]), _p(description, styles["item_body"]), _p(item.unit, styles["item_center"]),
+            _p(decimal_text(item.quantity), styles["item_center"]), _p(brl(item.material_unit), styles["item_center"]),
+            _p(brl(item.labor_unit), styles["item_center"]), _p(brl(item.material_total), styles["item_center"]),
+            _p(brl(item.labor_total), styles["item_center"]), _p(brl(item.total), styles["item_right_bold"]),
         ])
         section_material += item.material_total
         section_labor += item.labor_total
@@ -210,14 +252,14 @@ def export_pdf(quote: Quote, target: str | Path, logo_path: str | Path | None = 
         canvas.restoreState()
 
     story = [_header(quote, styles, logo), _items_table(quote, styles), Spacer(1, 4 * mm)]
-    story.append(Table([["", _p("TOTAL ACUMULADO", styles["bold"]), _p(brl(quote.material_total), styles["right_bold"]), _p(brl(quote.labor_total), styles["right_bold"]), _p(brl(quote.total), styles["right_bold"])]], colWidths=ACCUMULATED_TOTAL_WIDTHS, style=TableStyle(ACCUMULATED_TOTAL_STYLE)))
+    story.append(Table([["", _p("TOTAL ACUMULADO", styles["item_bold"]), _p(brl(quote.material_total), styles["item_right_bold"]), _p(brl(quote.labor_total), styles["item_right_bold"]), _p(brl(quote.total), styles["item_right_bold"])]], colWidths=ACCUMULATED_TOTAL_WIDTHS, style=TableStyle(ACCUMULATED_TOTAL_STYLE)))
     story.extend([Spacer(1, 5 * mm), _responsibilities(quote, styles), Spacer(1, 5 * mm), _commercial(quote, styles), Spacer(1, 3 * mm)])
     signature = Table([
         [_p(quote.notes, styles["body"]), ""],
         ["", _p("______________________________", styles["center"])],
         ["", _p(f"<b>{escape(quote.company.signer_name)}</b><br/>{escape(quote.company.signer_email)}<br/>{escape(quote.company.signer_title)}<br/>{escape(quote.company.signer_phone)}", styles["center"], markup=True)],
-    ], colWidths=[190 * mm, 87 * mm], rowHeights=[10 * mm, 6 * mm, 15 * mm])
-    signature.setStyle(TableStyle([("BOX", (0, 0), (-1, -1), 0.8, BLACK), ("SPAN", (0, 0), (0, 2)), ("VALIGN", (0, 0), (-1, -1), "TOP"), ("LEFTPADDING", (0, 0), (-1, -1), 2), ("RIGHTPADDING", (0, 0), (-1, -1), 2)]))
+    ], colWidths=[190 * mm, 87 * mm], rowHeights=SIGNATURE_ROW_HEIGHTS)
+    signature.setStyle(TableStyle(SIGNATURE_STYLE))
     story.append(KeepTogether(signature))
     doc.build(story, onFirstPage=page, onLaterPages=page)
     return output
