@@ -175,6 +175,18 @@ class HomeMenuTests(unittest.TestCase):
 
         self.assertEqual(popen.call_args.args[0], ["open", folder])
 
+    @patch("estimativa.cli.export_xlsx")
+    def test_excel_command_exports_next_to_json_by_default(self, export_xlsx):
+        with tempfile.TemporaryDirectory() as folder, redirect_stdout(StringIO()):
+            source = Path(folder) / "proposta.json"
+            Quote().save(source)
+
+            self.assertEqual(main(["excel", str(source)]), 0)
+
+        export_xlsx.assert_called_once()
+        args = export_xlsx.call_args.args
+        self.assertEqual(args[1], source.with_suffix(".xlsx"))
+
 
 if __name__ == "__main__":
     unittest.main()

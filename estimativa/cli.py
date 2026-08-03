@@ -19,6 +19,7 @@ from .naming import (
     set_quote_identity,
 )
 from .pdf_export import export_pdf
+from .xlsx_export import export_xlsx
 
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -565,6 +566,9 @@ def build_parser() -> argparse.ArgumentParser:
     pdf = sub.add_parser("pdf", help="gerar PDF de uma proposta")
     pdf.add_argument("arquivo")
     pdf.add_argument("-o", "--saida")
+    excel = sub.add_parser("excel", help="gerar Excel de uma proposta")
+    excel.add_argument("arquivo")
+    excel.add_argument("-o", "--saida")
     sample = sub.add_parser("exemplo", help="criar um exemplo JSON e PDF")
     sample.add_argument("--diretorio", default="output")
     return parser
@@ -596,6 +600,12 @@ def main(argv: list[str] | None = None) -> int:
                 open_pdf(output)
             else:
                 view_quote_pdf(Path(args.arquivo).expanduser())
+            return 0
+        if args.command == "excel":
+            quote = Quote.load(args.arquivo)
+            output = Path(args.saida).expanduser() if args.saida else Path(args.arquivo).expanduser().with_suffix(".xlsx")
+            export_xlsx(quote, output, DEFAULT_LOGO)
+            print(f"Excel gerado em {output}")
             return 0
         if args.command == "exemplo":
             directory = Path(args.diretorio).expanduser()

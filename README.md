@@ -64,6 +64,14 @@ Gerar ou regenerar o PDF:
 python3 orcamento.py pdf propostas/cliente-obra.json
 ```
 
+Gerar uma planilha Excel editável e formatada para impressão:
+
+```bash
+python3 orcamento.py excel propostas/cliente-obra.json
+```
+
+O Excel mantém o visual da proposta, inclui fórmulas para os totais de material e mão de obra e é salvo ao lado do JSON com a extensão `.xlsx`. Para escolher outro destino, use `-o arquivo.xlsx`.
+
 Mostrar os totais sem editar:
 
 ```bash
