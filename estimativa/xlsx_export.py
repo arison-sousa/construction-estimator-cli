@@ -228,10 +228,13 @@ def export_xlsx(quote: Quote, path: str | Path, logo_path: str | Path | None = N
         ("PRAZO DE EXECUÇÃO:", quote.execution_deadline),
         ("GARANTIA:", quote.warranty),
     ]
-    for label, value in terms:
+    visible_terms = [(label, value) for label, value in terms if str(value).strip()]
+    tax_height = 11 * max(1, len(quote.taxes.splitlines())) + 5
+    term_row_height = max(16, tax_height / max(1, len(visible_terms)))
+    for label, value in visible_terms:
         sheet.merge_range(row, 0, row, 3, label, formats["term_label"])
         sheet.write(row, 4, value, formats["term_value"])
-        sheet.set_row(row, 16)
+        sheet.set_row(row, term_row_height)
         row += 1
     sheet.merge_range(commercial_start, 5, row - 1, 5, "IMPOSTOS\nRECOLHIDOS:", formats["tax_label"])
     sheet.merge_range(commercial_start, 6, row - 1, 8, quote.taxes, formats["tax_text"])

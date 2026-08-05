@@ -51,6 +51,22 @@ class XlsxExportTests(unittest.TestCase):
 
         self.assertIn("<f>0</f><v>0.0</v>", sheet_xml)
 
+    def test_export_omits_blank_optional_commercial_terms(self):
+        quote = self.sample_quote()
+        quote.start_deadline = ""
+        quote.execution_deadline = ""
+        quote.warranty = ""
+
+        with tempfile.TemporaryDirectory() as folder:
+            output = Path(folder) / "proposta.xlsx"
+            export_xlsx(quote, output)
+            with ZipFile(output) as archive:
+                shared_strings = archive.read("xl/sharedStrings.xml").decode("utf-8")
+
+        self.assertNotIn("PRAZO DE INÍCIO", shared_strings)
+        self.assertNotIn("PRAZO DE EXECUÇÃO", shared_strings)
+        self.assertNotIn("GARANTIA:", shared_strings)
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -52,7 +52,7 @@ ACCUMULATED_TOTAL_STYLE = [
     ("LEFTPADDING", (0, 0), (-1, -1), 2),
     ("RIGHTPADDING", (0, 0), (-1, -1), 2),
 ]
-SIGNATURE_ROW_HEIGHTS = [12 * mm, 4 * mm, 15 * mm]
+SIGNATURE_ROW_HEIGHTS = [10 * mm, 3 * mm, 13 * mm]
 SIGNATURE_STYLE = [
     ("BOX", (0, 0), (-1, -1), 0.8, BLACK),
     ("SPAN", (0, 0), (0, 2)),
@@ -246,16 +246,28 @@ def _responsibilities(quote: Quote, styles):
 
 
 def _commercial(quote: Quote, styles):
-    rows = [
-        [_p("<b>VALIDADE DA PROPOSTA:</b>", styles["body"], markup=True), _p(quote.validity, styles["center"]), _p("<b>IMPOSTOS<br/>RECOLHIDOS:</b>", styles["center_bold"], markup=True), _p(quote.taxes, styles["center"])],
-        [_p("<b>CONDIÇÃO DE PAGAMENTO:</b>", styles["body"], markup=True), _p(quote.payment_terms, styles["center"]), "", ""],
-        [_p("<b>FRETE:</b>", styles["body"], markup=True), _p(quote.freight, styles["center"]), "", ""],
-        [_p("<b>PRAZO DE INÍCIO APÓS FECHAMENTO:</b>", styles["body"], markup=True), _p(quote.start_deadline, styles["center"]), "", ""],
-        [_p("<b>PRAZO DE EXECUÇÃO:</b>", styles["body"], markup=True), _p(quote.execution_deadline, styles["center"]), "", ""],
-        [_p("<b>GARANTIA:</b>", styles["body"], markup=True), _p(quote.warranty, styles["center"]), "", ""],
+    terms = [
+        ("VALIDADE DA PROPOSTA:", quote.validity),
+        ("CONDIÇÃO DE PAGAMENTO:", quote.payment_terms),
+        ("FRETE:", quote.freight),
+        ("PRAZO DE INÍCIO APÓS FECHAMENTO:", quote.start_deadline),
+        ("PRAZO DE EXECUÇÃO:", quote.execution_deadline),
+        ("GARANTIA:", quote.warranty),
     ]
+    visible_terms = [(label, value) for label, value in terms if str(value).strip()]
+    rows = []
+    for index, (label, value) in enumerate(visible_terms):
+        tax_label = _p("<b>IMPOSTOS<br/>RECOLHIDOS:</b>", styles["center_bold"], markup=True) if index == 0 else ""
+        tax_text = _p(quote.taxes, styles["center"]) if index == 0 else ""
+        rows.append([
+            _p(f"<b>{label}</b>", styles["body"], markup=True),
+            _p(value, styles["center"]),
+            tax_label,
+            tax_text,
+        ])
     table = Table(rows, colWidths=[123 * mm, 31 * mm, 25 * mm, 98 * mm])
-    table.setStyle(TableStyle([("BACKGROUND", (0, 0), (-1, -1), LIGHT), ("SPAN", (2, 0), (2, 5)), ("SPAN", (3, 0), (3, 5)), ("BOX", (0, 0), (-1, -1), 0.8, BLACK), ("GRID", (0, 0), (1, -1), 0.4, BLACK), ("LINEBEFORE", (2, 0), (2, -1), 0.8, BLACK), ("LINEBEFORE", (3, 0), (3, -1), 0.8, BLACK), ("VALIGN", (0, 0), (-1, -1), "MIDDLE"), ("LEFTPADDING", (0, 0), (-1, -1), 2), ("RIGHTPADDING", (0, 0), (-1, -1), 2), ("TOPPADDING", (0, 0), (-1, -1), 2), ("BOTTOMPADDING", (0, 0), (-1, -1), 2)]))
+    last_row = len(rows) - 1
+    table.setStyle(TableStyle([("BACKGROUND", (0, 0), (-1, -1), LIGHT), ("SPAN", (2, 0), (2, last_row)), ("SPAN", (3, 0), (3, last_row)), ("BOX", (0, 0), (-1, -1), 0.8, BLACK), ("GRID", (0, 0), (1, -1), 0.4, BLACK), ("LINEBEFORE", (2, 0), (2, -1), 0.8, BLACK), ("LINEBEFORE", (3, 0), (3, -1), 0.8, BLACK), ("VALIGN", (0, 0), (-1, -1), "MIDDLE"), ("LEFTPADDING", (0, 0), (-1, -1), 2), ("RIGHTPADDING", (0, 0), (-1, -1), 2), ("TOPPADDING", (0, 0), (-1, -1), 2), ("BOTTOMPADDING", (0, 0), (-1, -1), 2)]))
     return table
 
 
