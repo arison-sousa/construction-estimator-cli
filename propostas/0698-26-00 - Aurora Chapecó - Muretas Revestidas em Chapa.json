@@ -1,0 +1,73 @@
+{
+  "company": {
+    "name": "DEBASE CONSTRUTORA LTDA",
+    "tax_id": "30.884.014/0001-86",
+    "state_registration": "25.873.821-9",
+    "address": "Rua Jacutinga nº 449 Bairro Efapi",
+    "city": "Chapecó - SC",
+    "postal_code": "89.809-810",
+    "signer_name": "Ceser Kiefer",
+    "signer_title": "Diretor",
+    "signer_email": "comercial@debaseconstrutora.com.br",
+    "signer_phone": "(49) 99926-9847"
+  },
+  "info": {
+    "client": "Aurora Coop",
+    "location": "Chapecó - FACH I",
+    "project": "Restauração e construção de muretas revestidas em chapa",
+    "contact": "Raviel Henrique Wirth",
+    "city": "",
+    "proposal": "0698-26-00",
+    "proposal_number": 698,
+    "proposal_year": 2026,
+    "proposal_revision": 0,
+    "issue_date": "04/08/2026"
+  },
+  "items": [
+    {
+      "number": "",
+      "title": "",
+      "description": "",
+      "unit": "vb",
+      "quantity": "1",
+      "material_unit": "0.00",
+      "labor_unit": "0.00",
+      "section": "Restauração e Construção de Muretas Revestidas em Chapa",
+      "section_number": "1",
+      "is_section": true
+    },
+    {
+      "number": "1.1",
+      "title": "",
+      "description": "Fornecimento de material e mão de obra para restauração ou construção de 150 metros lineares de muretas revestidas em chapa nos corredores e em diversos locais da fábrica.\n\nO serviço inclui montagem, soldas sanitárias, quinas, sapatas em pilares, pés de galinha a cada 15 cm com ancoragem a cada 1,20 m ou conforme necessidade, acabamento com ENDURIT RP e rodapé sanitário, fechamento das extremidades, remoção de excessos das sapatas, cortes a 45° nos cantos, recuperação pontual do piso, limpeza e descarte dos resíduos.\n\nExecução aos domingos, conforme memorial descritivo da Aurora Coop.",
+      "unit": "ml",
+      "quantity": "150",
+      "material_unit": "200.00",
+      "labor_unit": "600.00",
+      "section": "",
+      "section_number": "",
+      "is_section": false
+    }
+  ],
+  "client_responsibilities": [
+    "Liberar toda a área para execução dos serviços aos domingos;",
+    "Acompanhar os serviços, fornecer o layout e as definições necessárias;",
+    "Deslocar interferências não previstas no orçamento;",
+    "Fornecer água, energia elétrica (220/380 V) e local próximo para montagem do canteiro;"
+  ],
+  "contractor_responsibilities": [
+    "Fornecer todos os itens exigidos pela legislação trabalhista, incluindo documentação, NRs, ASO e EPIs aplicáveis;",
+    "Verificar todas as dimensões no local antes da confecção e montagem;",
+    "Fornecer os materiais, a mão de obra qualificada, varetas, eletrodos e demais consumíveis necessários à execução;",
+    "Fornecer e sanitizar solda TIG, lixadeiras, discos, ferramentas e equipamentos de içamento quando necessários;",
+    "Manter a obra limpa e organizada, responsabilizando-se pelo descarte dos resíduos gerados;"
+  ],
+  "validity": "15 dias",
+  "payment_terms": "-",
+  "freight": "CIF",
+  "start_deadline": "",
+  "execution_deadline": "",
+  "warranty": "",
+  "taxes": "Sobre a Mão de Obra:\nINSS = Incluso no orçamento\nISS = Incluso no orçamento\nSobre material faturado pela DEBASE CONSTRUTORA LTDA:\nPIS = 0,65% Incluso no orçamento\nCOFINS = 3,0% Incluso no orçamento\nIRPJ: 1,20% Incluso no orçamento\nICMS, IPI = 0% Construção civil - isento",
+  "notes": "Atenciosamente,"
+}

@@ -30,6 +30,7 @@ from estimativa.pdf_export import (
     SIGNATURE_ROW_HEIGHTS,
     SIGNATURE_STYLE,
     _accumulated_total,
+    _commercial,
     _items_table,
     _styles,
 )
@@ -111,6 +112,16 @@ class ModelTests(unittest.TestCase):
         self.assertEqual(quote.start_deadline, "-")
         self.assertEqual(quote.execution_deadline, "-")
         self.assertEqual(quote.warranty, "-")
+
+    def test_pdf_omits_blank_optional_commercial_terms(self):
+        quote = Quote(start_deadline="", execution_deadline="", warranty="")
+        table = _commercial(quote, _styles())
+        labels = [row[0].getPlainText() for row in table._cellvalues]
+
+        self.assertEqual(
+            labels,
+            ["VALIDADE DA PROPOSTA:", "CONDIÇÃO DE PAGAMENTO:", "FRETE:"],
+        )
 
     def test_company_details_have_relaxed_line_spacing(self):
         styles = _styles()
@@ -241,7 +252,7 @@ class ModelTests(unittest.TestCase):
         self.assertAlmostEqual(RESPONSIBILITY_WIDTH * 2 + RESPONSIBILITY_GAP, CONTENT_WIDTH)
 
     def test_signature_line_sits_close_to_signer_name(self):
-        self.assertAlmostEqual(sum(SIGNATURE_ROW_HEIGHTS), 31 * 72 / 25.4)
+        self.assertAlmostEqual(sum(SIGNATURE_ROW_HEIGHTS), 26 * 72 / 25.4)
         self.assertIn(("TOPPADDING", (1, 1), (1, 1), 0), SIGNATURE_STYLE)
         self.assertIn(("BOTTOMPADDING", (1, 1), (1, 1), 0), SIGNATURE_STYLE)
         self.assertIn(("TOPPADDING", (1, 2), (1, 2), 0), SIGNATURE_STYLE)
