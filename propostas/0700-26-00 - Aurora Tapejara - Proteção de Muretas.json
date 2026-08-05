@@ -1,0 +1,86 @@
+{
+  "company": {
+    "name": "DEBASE CONSTRUTORA LTDA",
+    "tax_id": "30.884.014/0001-86",
+    "state_registration": "25.873.821-9",
+    "address": "Rua Jacutinga nº 449 Bairro Efapi",
+    "city": "Chapecó - SC",
+    "postal_code": "89.809-810",
+    "signer_name": "Ceser Kiefer",
+    "signer_title": "Diretor",
+    "signer_email": "comercial@debaseconstrutora.com.br",
+    "signer_phone": "(49) 99926-9847"
+  },
+  "info": {
+    "client": "Aurora",
+    "location": "Tapejara",
+    "project": "Instalação de Proteção de Muretas",
+    "contact": "Leonardo Aloisio Andreolla",
+    "city": "Tapejara - RS",
+    "proposal": "0700-26-00",
+    "proposal_number": 700,
+    "proposal_year": 2026,
+    "proposal_revision": 0,
+    "issue_date": "04/08/2026"
+  },
+  "items": [
+    {
+      "number": "",
+      "title": "",
+      "description": "",
+      "unit": "vb",
+      "quantity": "1",
+      "material_unit": "0.00",
+      "labor_unit": "0.00",
+      "section": "INSTALAÇÃO DE PROTEÇÃO DE MURETAS",
+      "section_number": "1",
+      "is_section": true
+    },
+    {
+      "number": "1.1",
+      "title": "Proteções para REC e LBM",
+      "description": "Fabricação, preparação e instalação de duas proteções para as muretas da Recepção de Aves e da Lavagem de Monoblocos, conforme dimensões e formato apresentados na Figura 04 do memorial descritivo.\n\nAs proteções serão fabricadas em chapa de aço inox AISI 304, com espessura de 3/8”, incluindo cortes, dobras, soldas, acabamento, transporte e todos os materiais e consumíveis necessários.\n\nInclui marcação, perfuração, chumbamento no concreto, fixação com Parabolts, equipamentos, ferramentas, EPIs, mão de obra para instalação aos finais de semana, limpeza final e destinação dos resíduos nos locais indicados pela contratante.",
+      "unit": "und",
+      "quantity": "2",
+      "material_unit": "9000.00",
+      "labor_unit": "3000.00",
+      "section": "",
+      "section_number": "",
+      "is_section": false
+    },
+    {
+      "number": "1.2",
+      "title": "Proteção para o Restaurante",
+      "description": "Fabricação, preparação e instalação de uma proteção para a mureta do recebimento do Restaurante, conforme dimensões, formato e posicionamento apresentados na Figura 05 do memorial descritivo. A instalação deverá respeitar o afastamento indicado de 750 mm em relação ao pilar esquerdo da entrada.\n\nA proteção será fabricada em chapa de aço inox AISI 304, com espessura de 3/8”, incluindo cortes, dobras, soldas, acabamento, transporte e todos os materiais e consumíveis necessários.\n\nInclui marcação, perfuração, chumbamento no concreto, fixação com Parabolts, equipamentos, ferramentas, EPIs, mão de obra para instalação aos finais de semana, limpeza final e destinação dos resíduos nos locais indicados pela contratante.",
+      "unit": "und",
+      "quantity": "1",
+      "material_unit": "13000.00",
+      "labor_unit": "4500.00",
+      "section": "",
+      "section_number": "",
+      "is_section": false
+    }
+  ],
+  "client_responsibilities": [
+    "Liberar as áreas para execução dos serviços aos finais de semana;",
+    "Acompanhar os serviços e fornecer definições quando necessário;",
+    "Fornecer água e energia elétrica (220/380 V) necessárias para a execução dos serviços;",
+    "Indicar os pontos exatos de instalação e os locais destinados à separação dos resíduos;",
+    "Permitir o acesso e a montagem do canteiro conforme programação acordada."
+  ],
+  "contractor_responsibilities": [
+    "Fornecer as chapas de aço inox AISI 304, Parabolts, chumbadores e todos os materiais e consumíveis necessários;",
+    "Fornecer mão de obra qualificada, EPIs e todos os itens exigidos pela legislação trabalhista;",
+    "Fornecer ferramentas e equipamentos necessários para fabricação, transporte e instalação;",
+    "Conferir as medidas, formatos, pontos de fixação e condições do concreto in loco antes da fabricação;",
+    "Zelar pela organização, limpeza e acabamento durante toda a execução e separar os resíduos nos locais indicados pela contratante."
+  ],
+  "validity": "15 dias",
+  "payment_terms": "-",
+  "freight": "CIF",
+  "start_deadline": "-",
+  "execution_deadline": "-",
+  "warranty": "-",
+  "taxes": "Sobre a Mão de Obra:\nINSS = Incluso no orçamento\nISS = Incluso no orçamento\nSobre material faturado pela DEBASE CONSTRUTORA LTDA:\nPIS = 0,65% Incluso no orçamento\nCOFINS = 3,0% Incluso no orçamento\nIRPJ: 1,20% Incluso no orçamento\nICMS, IPI = 0% Construção civil - isento",
+  "notes": "Atenciosamente,"
+}
