@@ -279,6 +279,8 @@ def export_pdf(quote: Quote, target: str | Path, logo_path: str | Path | None = 
     doc = SimpleDocTemplate(str(output), pagesize=landscape(A4), leftMargin=10 * mm, rightMargin=10 * mm, topMargin=8 * mm, bottomMargin=10 * mm, title=quote.info.proposal or "Proposta comercial", author=quote.company.name)
 
     def page(canvas, document):
+        if not quote.show_details_after_total:
+            return
         canvas.saveState()
         canvas.setFont("Helvetica", 7)
         canvas.drawRightString(landscape(A4)[0] - 10 * mm, 5 * mm, str(document.page))
@@ -286,13 +288,14 @@ def export_pdf(quote: Quote, target: str | Path, logo_path: str | Path | None = 
 
     story = [_header(quote, styles, logo), _items_table(quote, styles), Spacer(1, 4 * mm)]
     story.append(_accumulated_total(quote, styles))
-    story.extend([Spacer(1, 5 * mm), _responsibilities(quote, styles), Spacer(1, 5 * mm), _commercial(quote, styles), Spacer(1, 3 * mm)])
-    signature = Table([
-        [_p(quote.notes, styles["body"]), ""],
-        ["", _p("______________________________", styles["center"])],
-        ["", _p(f"<b>{escape(quote.company.signer_name)}</b><br/>{escape(quote.company.signer_email)}<br/>{escape(quote.company.signer_title)}<br/>{escape(quote.company.signer_phone)}", styles["center"], markup=True)],
-    ], colWidths=[190 * mm, 87 * mm], rowHeights=SIGNATURE_ROW_HEIGHTS)
-    signature.setStyle(TableStyle(SIGNATURE_STYLE))
-    story.append(KeepTogether(signature))
+    if quote.show_details_after_total:
+        story.extend([Spacer(1, 5 * mm), _responsibilities(quote, styles), Spacer(1, 5 * mm), _commercial(quote, styles), Spacer(1, 3 * mm)])
+        signature = Table([
+            [_p(quote.notes, styles["body"]), ""],
+            ["", _p("______________________________", styles["center"])],
+            ["", _p(f"<b>{escape(quote.company.signer_name)}</b><br/>{escape(quote.company.signer_email)}<br/>{escape(quote.company.signer_title)}<br/>{escape(quote.company.signer_phone)}", styles["center"], markup=True)],
+        ], colWidths=[190 * mm, 87 * mm], rowHeights=SIGNATURE_ROW_HEIGHTS)
+        signature.setStyle(TableStyle(SIGNATURE_STYLE))
+        story.append(KeepTogether(signature))
     doc.build(story, onFirstPage=page, onLaterPages=page)
     return output

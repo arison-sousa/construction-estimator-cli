@@ -156,6 +156,7 @@ class Quote:
     warranty: str = "-"
     taxes: str = DEFAULT_TAXES
     notes: str = "Atenciosamente,"
+    show_details_after_total: bool = True
 
     @property
     def material_total(self) -> Decimal:
