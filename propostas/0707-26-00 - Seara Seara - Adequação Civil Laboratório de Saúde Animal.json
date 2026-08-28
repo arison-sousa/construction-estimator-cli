@@ -1,0 +1,52 @@
+{
+  "company": {
+    "name": "DEBASE CONSTRUTORA LTDA",
+    "tax_id": "30.884.014/0001-86",
+    "state_registration": "25.873.821-9",
+    "address": "Rua Jacutinga nº 449 Bairro Efapi",
+    "city": "Chapecó - SC",
+    "postal_code": "89.809-810",
+    "signer_name": "Ceser Kiefer",
+    "signer_title": "Diretor",
+    "signer_email": "comercial@debaseconstrutora.com.br",
+    "signer_phone": "(49) 99926-9847"
+  },
+  "info": {
+    "client": "Seara",
+    "location": "Seara - SC",
+    "project": "Adequação Civil Laboratório de Saúde Animal",
+    "contact": "Aline Dall'Bello",
+    "city": "Seara - SC",
+    "proposal": "0707-26-00",
+    "proposal_number": 707,
+    "proposal_year": 2026,
+    "proposal_revision": 0,
+    "issue_date": "18/08/2026"
+  },
+  "items": [
+    {"number":"","title":"","description":"","unit":"vb","quantity":"1","material_unit":"0.00","labor_unit":"0.00","section":"Adequação Civil do Laboratório","section_number":"1","is_section":true},
+    {"number":"1.1","title":"","description":"Fornecimento de projetos executivos arquitetônico, de locação e estrutural, incluindo aprovação prévia junto à engenharia, ART e memoriais de cálculo assinados.\n\nOs serviços contemplam o acompanhamento técnico necessário para a execução da adequação civil do Laboratório de Saúde Animal.","unit":"vb","quantity":"1","material_unit":"2565.29","labor_unit":"15391.75","section":"","section_number":"","is_section":false},
+    {"number":"1.2","title":"","description":"Isolamento da área de intervenção com tapumes termoacústicos, dupla camada de lona plástica e vedação perimetral, assegurando contenção de poeira nas áreas adjacentes.\n\nDemolição controlada de aproximadamente 21 m² de alvenaria, 45 m² de divisórias Eucatex, muretas, laje para passagem de escada e parede estrutural da caixa d’água.\n\nInclui retirada e destinação dos resíduos, remoção de vaso sanitário, chuveiro, pia, armários, divisórias em granito e tubulações existentes indicadas no memorial.","unit":"vb","quantity":"1","material_unit":"2052.23","labor_unit":"12313.40","section":"","section_number":"","is_section":false},
+    {"number":"1.3","title":"","description":"Execução de 40 m² de alvenaria de vedação, incluindo fechamento de vãos, construção do novo vestiário/sanitário, amarrações, chapisco e reboco.\n\nFornecimento e assentamento de revestimento porcelanato nas paredes internas do vestiário, conforme especificação técnica ou similar aprovado.","unit":"vb","quantity":"1","material_unit":"14365.64","labor_unit":"8721.99","section":"","section_number":"","is_section":false},
+    {"number":"1.4","title":"","description":"Fornecimento e instalação de duas paredes em divisória leve tipo Eucatex, com portas, perfis de alumínio, estrutura de fixação, vedação e acabamento.\n\nDimensões de referência: parede de 1,40 x 2,80 m e parede de 4,50 x 2,80 m, ambas na cor branca.","unit":"vb","quantity":"1","material_unit":"4104.47","labor_unit":"2052.23","section":"","section_number":"","is_section":false},
+    {"number":"1.5","title":"","description":"Fornecimento e instalação de divisória em granito com 5,50 m de comprimento e 2,00 m de altura, incluindo modulação, fixações em aço inox, travamento, acabamento e vedação.\n\nAs placas serão entregues alinhadas, sem quinas vivas e com limpeza final do conjunto.","unit":"vb","quantity":"1","material_unit":"7182.82","labor_unit":"3078.35","section":"","section_number":"","is_section":false},
+    {"number":"1.6","title":"","description":"Fornecimento e instalação de quatro portas de alumínio tipo veneziana, na cor branca, completas com marcos, ferragens, fechaduras e fixações.\n\nInclui duas portas de 0,80 x 2,10 m e duas portas de 0,60 x 1,80 m para os acessos do vestiário, sanitário e boxes.","unit":"vb","quantity":"1","material_unit":"4104.47","labor_unit":"2052.23","section":"","section_number":"","is_section":false},
+    {"number":"1.7","title":"","description":"Fornecimento e assentamento de 60 m² de porcelanato de piso 90 x 90 cm e 35 m² de porcelanato de parede 30 x 90 cm, incluindo argamassa colante, rejunte e niveladores.\n\nAs peças serão instaladas sobre base preparada, com dupla colagem e acabamento uniforme, conforme paginação aprovada.","unit":"vb","quantity":"1","material_unit":"15391.75","labor_unit":"7182.82","section":"","section_number":"","is_section":false},
+    {"number":"1.8","title":"","description":"Preparação e aplicação de revestimento de uretano autonivelante na sala de inoculação, com área aproximada de 16 m².\n\nInclui lixamento, correção da base, primer, scratch coat, camada autonivelante e tratamento das juntas existentes.","unit":"vb","quantity":"1","material_unit":"2565.29","labor_unit":"4104.47","section":"","section_number":"","is_section":false},
+    {"number":"1.9","title":"","description":"Reinstalação de vaso sanitário, chuveiro e pia, com conexões de água fria e esgoto na rede existente, incluindo materiais de consumo, fixações e testes de estanqueidade.\n\nInclui perfuração de laje e instalação de quatro passagens técnicas com tubulações de esgoto em PVC, conforme projeto.","unit":"vb","quantity":"1","material_unit":"3591.41","labor_unit":"5643.64","section":"","section_number":"","is_section":false},
+    {"number":"1.10","title":"","description":"Adequação da caixa d’água existente: isolamento, esvaziamento, abertura controlada de vão de 2,50 x 2,50 m, retirada do reservatório antigo e destinação dos resíduos.\n\nInclui regularização da base, impermeabilização, requadramento do vão, instalação hidráulica, testes de estanqueidade, higienização e limpeza final.","unit":"vb","quantity":"1","material_unit":"9235.05","labor_unit":"11287.29","section":"","section_number":"","is_section":false},
+    {"number":"1.11","title":"","description":"Fornecimento e instalação de reservatório novo para água potável, capacidade nominal de 5.000 litros, com tampa, conexões, registros e torneira de boia.\n\nReservatório em PEAD atóxico, próprio para água potável, com os acessórios necessários para operação e vedação.","unit":"vb","quantity":"1","material_unit":"3078.35","labor_unit":"1026.12","section":"","section_number":"","is_section":false},
+    {"number":"1.12","title":"","description":"Fornecimento e instalação de porta de alumínio tipo veneziana de 2,50 x 2,50 m para fechamento do acesso técnico ao reservatório.\n\nInclui pintura eletrostática branca, folhas móveis, marcos, dobradiças, roldanas, fechadura, fixações e vedação perimetral.","unit":"vb","quantity":"1","material_unit":"2052.23","labor_unit":"1026.12","section":"","section_number":"","is_section":false},
+    {"number":"1.13","title":"","description":"Manutenção da organização, sinalização e limpeza diária da frente de serviço durante toda a execução.\n\nInclui limpeza técnica final, retirada de sobras de materiais e entrega das áreas de intervenção em condições de uso.","unit":"vb","quantity":"1","material_unit":"513.06","labor_unit":"4617.53","section":"","section_number":"","is_section":false}
+  ],
+  "client_responsibilities": ["Liberar toda a área para execução dos serviços;","Acompanhar os serviços e fornecer definições quando necessário;","Deslocar interferências na execução dos serviços que não foram listadas na planilha do orçamento;","Fornecer água e energia elétrica (220/380 V) necessária para a execução dos serviços;","Permitir montagem do canteiro de obras próximo ao local dos serviços;"],
+  "contractor_responsibilities": ["Fornecer todos os itens exigidos pela legislação trabalhista;","Fornecer material e mão de obra qualificada para execução dos serviços contratados;","Fornecer todos os equipamentos necessários para execução dos serviços contratados;","Zelar pela organização e limpeza da obra e do canteiro durante o andamento da mesma;"],
+  "validity":"15 dias",
+  "payment_terms":"A definir",
+  "freight":"CIF",
+  "start_deadline":"A definir",
+  "execution_deadline":"A definir",
+  "warranty":"A definir",
+  "taxes":"Sobre a Mão de Obra:\nINSS = Incluso no orçamento\nISS = Incluso no orçamento\nSobre material faturado pela DEBASE CONSTRUTORA LTDA:\nPIS = 0,65% Incluso no orçamento\nCOFINS = 3,0% Incluso no orçamento\nIRPJ: 1,20% Incluso no orçamento\nICMS, IPI = 0% Construção civil - isento",
+  "notes":"Atenciosamente,"
+}

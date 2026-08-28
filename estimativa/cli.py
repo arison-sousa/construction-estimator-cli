@@ -8,7 +8,6 @@ import shlex
 import shutil
 import subprocess
 import sys
-import tempfile
 
 from .models import Item, Quote, brl, money, number
 from .naming import (
@@ -119,21 +118,23 @@ def ask_multiline(label: str, default: str = "") -> str:
     else:
         print("Salve o texto e feche o editor para voltar à proposta.")
 
-    with tempfile.TemporaryDirectory(prefix="orcamento-") as temp_dir:
-        text_path = Path(temp_dir) / "descricao.txt"
-        text_path.write_text(default, encoding="utf-8")
-        try:
-            result = subprocess.run([*command, str(text_path)], check=False)
-        except KeyboardInterrupt:
-            print("\nEdição cancelada. O texto anterior foi mantido.")
-            return default
-        except OSError as exc:
-            print(f"Não foi possível abrir o editor de texto: {exc}")
-            return default
-        if result.returncode != 0:
-            print("O editor foi fechado sem concluir. O texto anterior foi mantido.")
-            return default
-        return text_path.read_text(encoding="utf-8").strip() or default
+    # A fixed workspace scratch file is reliable in managed Windows
+    # environments where a newly created temporary directory may be writable
+    # only by its creator, not by the selected editor process.
+    text_path = ROOT / ".orcamento-descricao.tmp.txt"
+    text_path.write_text(default, encoding="utf-8")
+    try:
+        result = subprocess.run([*command, str(text_path)], check=False)
+    except KeyboardInterrupt:
+        print("\nEdição cancelada. O texto anterior foi mantido.")
+        return default
+    except OSError as exc:
+        print(f"Não foi possível abrir o editor de texto: {exc}")
+        return default
+    if result.returncode != 0:
+        print("O editor foi fechado sem concluir. O texto anterior foi mantido.")
+        return default
+    return text_path.read_text(encoding="utf-8").strip() or default
 
 
 def edit_info(quote: Quote) -> None:

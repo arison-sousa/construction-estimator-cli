@@ -1,0 +1,10 @@
+{
+  "info":{"client":"Aurora","location":"Chapecó - SC","project":"Ligação de Ralos","contact":"Raviel Henrique Wirth","city":"Chapecó - SC","proposal":"0709-26-00","proposal_number":709,"proposal_year":2026,"proposal_revision":0,"issue_date":"18/08/2026"},
+  "items":[
+    {"number":"","title":"","description":"","unit":"vb","quantity":"1","material_unit":"0","labor_unit":"0","section":"Rede de Esgoto para Ralos","section_number":"1","is_section":true},
+    {"number":"1.1","title":"","description":"Rompimento controlado do piso entre a mesa de paleta e barriga para acesso à rede de esgoto existente.\n\nInclui remoção de dois ralos e destinação dos resíduos gerados.","unit":"vb","quantity":"1","material_unit":"500.00","labor_unit":"3500.00","section":"","section_number":"","is_section":false},
+    {"number":"1.2","title":"","description":"Fornecimento e instalação de nova rede de esgoto em PVC 100 mm, com aproximadamente 9 m de tubulação, um tê, uma curva de 90° e uma curva de 45°.\n\nInclui conexão dos ralos na nova rede, testes de escoamento e materiais consumíveis necessários.","unit":"vb","quantity":"1","material_unit":"3500.00","labor_unit":"4000.00","section":"","section_number":"","is_section":false},
+    {"number":"1.3","title":"","description":"Regularização da área após a instalação, deixando o local preparado para a reconstrução do piso com materiais fornecidos pela contratante.\n\nInclui limpeza e organização final da área de trabalho.","unit":"vb","quantity":"1","material_unit":"1000.00","labor_unit":"2300.00","section":"","section_number":"","is_section":false}
+  ],
+  "validity":"15 dias","payment_terms":"A definir","freight":"CIF","start_deadline":"A definir","execution_deadline":"A definir","warranty":"12 meses","notes":"Atenciosamente,"
+}

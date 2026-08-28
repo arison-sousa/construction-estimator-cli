@@ -1,0 +1,27 @@
+{
+  "info": {
+    "client": "JBS Seara",
+    "location": "Seara - SC",
+    "project": "Reestruturação de Muretas e Isopainel",
+    "contact": "Felipe",
+    "city": "Seara - SC",
+    "proposal": "0714-26-00",
+    "proposal_number": 714,
+    "proposal_year": 2026,
+    "proposal_revision": 0,
+    "issue_date": "20/08/2026"
+  },
+  "items": [
+    {"number":"","title":"","description":"","unit":"vb","quantity":"1","material_unit":"0","labor_unit":"0","section":"Desmontagem e Demolição","section_number":"1","is_section":true},
+    {"number":"1.1","title":"","description":"Desmontagem do isopainel existente, com dimensão aproximada de 4,80 x 3,65 m.\n\nRompimento e demolição da mureta existente, nas dimensões informadas de 35,00 x 4,80 m, incluindo retirada das proteções existentes e destinação dos resíduos.","unit":"vb","quantity":"1","material_unit":"2000.00","labor_unit":"8000.00","section":"","section_number":"","is_section":false},
+    {"number":"1.2","title":"","description":"Fabricação de novas muretas nas dimensões previstas de 35,00 x 4,80 m.\n\nInclui reestruturação, adequação e acabamento das novas muretas conforme a necessidade da instalação e o recebimento dos isopainéis.","unit":"vb","quantity":"1","material_unit":"18000.00","labor_unit":"17000.00","section":"","section_number":"","is_section":false},
+    {"number":"1.3","title":"","description":"Instalação do isopainel sobre as novas muretas, com dimensão aproximada de 4,80 x 3,65 m.\n\nInclui materiais de fixação, vedação, arremates, ajustes necessários, organização e limpeza final da área.","unit":"vb","quantity":"1","material_unit":"5000.00","labor_unit":"6000.00","section":"","section_number":"","is_section":false}
+  ],
+  "validity":"15 dias",
+  "payment_terms":"A definir",
+  "freight":"CIF",
+  "start_deadline":"A definir",
+  "execution_deadline":"A definir",
+  "warranty":"12 meses",
+  "notes":"Atenciosamente,"
+}
