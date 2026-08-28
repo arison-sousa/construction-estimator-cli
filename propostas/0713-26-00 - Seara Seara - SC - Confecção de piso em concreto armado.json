@@ -1,0 +1,86 @@
+{
+  "company": {
+    "name": "DEBASE CONSTRUTORA LTDA",
+    "tax_id": "30.884.014/0001-86",
+    "state_registration": "25.873.821-9",
+    "address": "Rua Jacutinga nº 449 Bairro Efapi",
+    "city": "Chapecó - SC",
+    "postal_code": "89.809-810",
+    "signer_name": "Ceser Kiefer",
+    "signer_title": "Diretor",
+    "signer_email": "comercial@debaseconstrutora.com.br",
+    "signer_phone": "(49) 99926-9847"
+  },
+  "info": {
+    "client": "Seara",
+    "location": "Seara - SC",
+    "project": "Confecção de piso em concreto armado",
+    "contact": "Ricardo A. Golfe",
+    "city": "",
+    "proposal": "0713-26-00",
+    "proposal_number": 713,
+    "proposal_year": 2026,
+    "proposal_revision": 0,
+    "issue_date": "19/08/2026"
+  },
+  "items": [
+    {
+      "number": "",
+      "title": "",
+      "description": "",
+      "unit": "vb",
+      "quantity": "1",
+      "material_unit": "0.00",
+      "labor_unit": "0.00",
+      "section": "Recuperação de pavimento",
+      "section_number": "1",
+      "is_section": true
+    },
+    {
+      "number": "1.1",
+      "title": "",
+      "description": "Fornecimento de todos os materiais, equipamentos, ferramentas, consumíveis e mão de obra necessários para a recuperação de aproximadamente 50 m² de pavimento, distribuídos em diversos pontos do pátio da fábrica.\n\nInclui corte do pavimento existente, demolição e remoção do pavimento deteriorado, limpeza, preparação, regularização e compactação da base quando necessário.\n\nExecução de novo pavimento em concreto armado com espessura de 18 cm, dupla armadura em tela soldada Q196 e treliças TG-8, utilizando concreto usinado fck mínimo de 40 MPa, incluindo lançamento, adensamento, nivelamento, acabamento e cura.\n\nInclui remoção e destinação dos resíduos e todos os recursos necessários para a entrega completa das áreas recuperadas.",
+      "unit": "m2",
+      "quantity": "50",
+      "material_unit": "280.00",
+      "labor_unit": "140.00",
+      "section": "",
+      "section_number": "",
+      "is_section": false
+    },
+    {
+      "number": "1.2",
+      "title": "",
+      "description": "Fornecimento de material e mão de obra para ajuste em forro isopainel PIR de 100 mm, em aço inox em ambos os lados.\n\nInclui recorte de aproximadamente 8 m² de forro para elevação do pé-direito em aproximadamente 50 cm, fechamento de todo o perímetro com isopainel PIR de 100 mm em aço inox e todos os acabamentos em aço inox necessários.\n\nTodos os serviços deverão ser executados por profissionais habilitados, com materiais novos, ART de projeto e execução, mão de obra, materiais, equipamentos, transporte, montagem, testes e ajustes finais até a aprovação da contratante.",
+      "unit": "m2",
+      "quantity": "8",
+      "material_unit": "500.00",
+      "labor_unit": "200.00",
+      "section": "",
+      "section_number": "",
+      "is_section": false
+    }
+  ],
+  "client_responsibilities": [
+    "Liberar toda a área para execução dos serviços;",
+    "Acompanhar os serviços e fornecer definições quando necessário;",
+    "Deslocar interferências na execução dos serviços que não foram listadas na planilha do orçamento;",
+    "Fornecer água e energia elétrica (220/380 V) necessária para a execução dos serviços;",
+    "Permitir montagem do canteiro de obras próximo ao local dos serviços;"
+  ],
+  "contractor_responsibilities": [
+    "Fornecer todos os itens exigidos pela legislação trabalhista;",
+    "Fornecer material e mão de obra qualificada para execução dos serviços contratados;",
+    "Fornecer todos os equipamentos necessários para execução dos serviços contratados;",
+    "Zelar pela organização e limpeza da obra e do canteiro durante o andamento da mesma;"
+  ],
+  "validity": "15 dias",
+  "payment_terms": "-",
+  "freight": "CIF",
+  "start_deadline": "-",
+  "execution_deadline": "-",
+  "warranty": "-",
+  "taxes": "Sobre a Mão de Obra:\nINSS = Incluso no orçamento\nISS = Incluso no orçamento\nSobre material faturado pela DEBASE CONSTRUTORA LTDA:\nPIS = 0,65% Incluso no orçamento\nCOFINS = 3,0% Incluso no orçamento\nIRPJ: 1,20% Incluso no orçamento\nICMS, IPI = 0% Construção civil - isento",
+  "notes": "Atenciosamente,",
+  "show_details_after_total": true
+}

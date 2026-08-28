@@ -1,0 +1,123 @@
+{
+  "company": {
+    "name": "DEBASE CONSTRUTORA LTDA",
+    "tax_id": "30.884.014/0001-86",
+    "state_registration": "25.873.821-9",
+    "address": "Rua Jacutinga nº 449 Bairro Efapi",
+    "city": "Chapecó - SC",
+    "postal_code": "89.809-810",
+    "signer_name": "Ceser Kiefer",
+    "signer_title": "Diretor",
+    "signer_email": "comercial@debaseconstrutora.com.br",
+    "signer_phone": "(49) 99926-9847"
+  },
+  "info": {
+    "client": "JBS Seara",
+    "location": "Unidade Seberi - RS",
+    "project": "Adequação PPCI para Obtenção do AVCB - Fase 03/03",
+    "contact": "Gustavo da Costa Dahmer",
+    "city": "Seberi - RS",
+    "proposal": "0711-26-00",
+    "proposal_number": 711,
+    "proposal_year": 2026,
+    "proposal_revision": 0,
+    "issue_date": "10/08/2026"
+  },
+  "items": [
+    {
+      "number": "",
+      "title": "",
+      "description": "",
+      "unit": "vb",
+      "quantity": "1",
+      "material_unit": "0.00",
+      "labor_unit": "0.00",
+      "section": "Adequação Civil PPCI - Saídas de Emergência",
+      "section_number": "1",
+      "is_section": true
+    },
+    {
+      "number": "1.1",
+      "title": "",
+      "description": "Levantamento técnico, planejamento e acompanhamento da obra para adequação das saídas de emergência previstas no projeto PPCI aprovado junto ao CBMRS, incluindo visita técnica, avaliação dos fluxos, rotas, níveis e interferências existentes in loco.\n\nInclui responsável técnico, técnico de segurança durante a execução, análise de riscos, dimensionamento dos elementos estruturais, ART, memorial de cálculo ou termo de entrega e garantia válido por 5 anos.\n\nAo final, fornecimento de projeto As Built em PDF e DWG, com cortes, fachadas, vistas e levantamento fotográfico de cada saída de emergência executada.",
+      "unit": "vb",
+      "quantity": "1",
+      "material_unit": "0.00",
+      "labor_unit": "18000.00",
+      "section": "",
+      "section_number": "",
+      "is_section": false
+    },
+    {
+      "number": "1.2",
+      "title": "",
+      "description": "Fornecimento e instalação de 12 portas de saída de emergência, com vão livre de 1.100 x 2.100 mm e marco em aço inox do tipo embutir em parede de isopainel, conforme projeto PPCI e definições aprovadas pela engenharia da unidade.\n\nInclui abertura dos vãos em isopainel, alvenaria ou elementos existentes, considerando as interferências encontradas in loco; reforços, reenquadramentos, ferragens, fixações, acabamentos, soleiras e esquadros revestidos em Endurit®, bem como a recomposição das superfícies afetadas.\n\nOs modelos, o sentido de abertura e os detalhes de instalação das portas deverão ser validados com a supervisão da CONTRATANTE antes da fabricação.",
+      "unit": "und",
+      "quantity": "12",
+      "material_unit": "12500.00",
+      "labor_unit": "6500.00",
+      "section": "",
+      "section_number": "",
+      "is_section": false
+    },
+    {
+      "number": "1.3",
+      "title": "",
+      "description": "Execução das adequações civis das saídas de emergência 01 e 02, localizadas no Abate Área Suja e no corredor das Câmaras de Equalização de Carcaças.\n\nInclui abertura e adequação de muretas, escavação, preparação e compactação da base, formas, armaduras, concretagem e acabamento dos pisos e patamares externos, garantindo saída segura para a área gramada e a interligação entre os dois pontos.\n\nContempla todos os materiais, equipamentos, proteção das áreas, transporte e destinação dos resíduos gerados.",
+      "unit": "vb",
+      "quantity": "1",
+      "material_unit": "24000.00",
+      "labor_unit": "18000.00",
+      "section": "",
+      "section_number": "",
+      "is_section": false
+    },
+    {
+      "number": "1.4",
+      "title": "",
+      "description": "Execução das adequações civis da saída de emergência 04, localizada ao final do corredor entre blocos, considerando a diferença de nível existente.\n\nInclui construção de calçada, patamares e escada, com fornecimento e instalação de guarda-corpos em aço inox, dimensionados e fixados para suportar o trânsito e os impactos previstos durante uma evacuação.\n\nContempla fundações, chumbadores, fixações, acabamentos, equipamentos e todos os materiais necessários à entrega do conjunto completo.",
+      "unit": "vb",
+      "quantity": "1",
+      "material_unit": "35000.00",
+      "labor_unit": "22000.00",
+      "section": "",
+      "section_number": "",
+      "is_section": false
+    },
+    {
+      "number": "1.5",
+      "title": "",
+      "description": "Reavaliação e adequação civil das saídas de emergência 05 e 06, considerando as interferências existentes, o fluxo de veículos e as diferenças de nível próximas às áreas.\n\nInclui, quando confirmada a necessidade em campo, a execução de escada e patamares para vencer o desnível, com fornecimento e instalação de guarda-corpos em aço zincado, aplicação de fundo preparador adequado e pintura em poliuretano (PU).\n\nContempla fundações, chumbadores, fixações, acabamentos e todos os materiais e equipamentos necessários.",
+      "unit": "vb",
+      "quantity": "1",
+      "material_unit": "22000.00",
+      "labor_unit": "16000.00",
+      "section": "",
+      "section_number": "",
+      "is_section": false
+    },
+    {
+      "number": "1.6",
+      "title": "",
+      "description": "Adequações civis complementares nas rotas e saídas de emergência 03, 07, 08, 10 e 12, incluindo ajustes de vãos, recomposição de isopainéis, alvenarias, muretas, pisos e acabamentos afetados pela implantação.\n\nInclui mobilização, ferramentas, equipamentos para trabalho em altura, içamento e movimentação de cargas, cortes e soldas, proteções coletivas, isolamento das frentes de serviço, limpeza diária e limpeza final da obra.\n\nTodo o layout, modelo, método executivo e eventual alteração decorrente de interferência deverão ser previamente alinhados com a supervisão da unidade.",
+      "unit": "vb",
+      "quantity": "1",
+      "material_unit": "18000.00",
+      "labor_unit": "18000.00",
+      "section": "",
+      "section_number": "",
+      "is_section": false
+    }
+  ],
+  "client_responsibilities": [],
+  "contractor_responsibilities": [],
+  "validity": "",
+  "payment_terms": "",
+  "freight": "",
+  "start_deadline": "",
+  "execution_deadline": "",
+  "warranty": "",
+  "taxes": "",
+  "notes": "",
+  "show_details_after_total": false
+}
