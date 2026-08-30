@@ -34,10 +34,12 @@ O programa atribui automaticamente o próximo número disponível no ano atual e
 0001-26-00 - JBS Ipumirim - Reforma Piso Almoxarifado.json
 ```
 
-No ano seguinte, a contagem reinicia em `0001`. Para salvar em outra pasta, use `--diretorio`:
+Por padrão, as propostas são salvas fora do repositório do programa em `~/Documents/debase-proposals`. A pasta é criada automaticamente na primeira proposta, para que PDFs, JSON e planilhas não façam parte do código-fonte ou de uma release.
+
+Para salvar em outra pasta, use `--diretorio`:
 
 ```bash
-python3 orcamento.py novo --diretorio propostas
+python3 orcamento.py novo --diretorio "/caminho/para/minhas-propostas"
 ```
 
 O editor permite adicionar seções (sempre acompanhadas do primeiro item), acrescentar itens a uma seção e editar as condições comerciais. Ao adicionar um item, informe o número da seção ou pressione `Enter` para usar a última. Para editar ou remover uma linha, informe o número da seção ou do item, como `2` ou `2.1`. Editar uma seção altera seu título; editar um item permite atualizar sua descrição, unidade, quantidade e valores. As responsabilidades permanecem com o texto padrão da proposta.

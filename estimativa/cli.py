@@ -23,7 +23,9 @@ from .xlsx_export import export_xlsx
 
 ROOT = Path(__file__).resolve().parent.parent
 DEFAULT_LOGO = ROOT / "assets" / "debase-logo.jpg"
-DEFAULT_PROPOSALS_DIR = Path("propostas")
+# Proposal documents are business data, not source code.  Keep them outside the
+# CLI checkout by default, while still allowing an explicit folder per command.
+DEFAULT_PROPOSALS_DIR = Path.home() / "Documents" / "debase-proposals"
 
 
 def ask(label: str, default: str = "") -> str:
@@ -482,6 +484,7 @@ def sample_quote() -> Quote:
 
 
 def create_quote(directory: Path = DEFAULT_PROPOSALS_DIR) -> int:
+    directory.mkdir(parents=True, exist_ok=True)
     quote = Quote()
     edit_info(quote)
     set_quote_identity(quote, next_quote_identity(directory, date.today().year))
@@ -517,6 +520,7 @@ def view_quote_pdf(source: Path) -> Path:
 
 
 def home(directory: Path = DEFAULT_PROPOSALS_DIR) -> int:
+    directory.mkdir(parents=True, exist_ok=True)
     while True:
         print("\nDEBASE — PROPOSTAS\n")
         print("1 Nova proposta")
@@ -557,7 +561,11 @@ def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="orcamento", description="Crie e exporte propostas comerciais pelo terminal.")
     sub = parser.add_subparsers(dest="command")
     new = sub.add_parser("novo", help="criar uma proposta interativamente")
-    new.add_argument("--diretorio", default="propostas", help="pasta onde a proposta será salva")
+    new.add_argument(
+        "--diretorio",
+        default=str(DEFAULT_PROPOSALS_DIR),
+        help="pasta onde a proposta será salva (padrão: ~/Documents/debase-proposals)",
+    )
     edit = sub.add_parser("editar", help="editar uma proposta salva")
     edit.add_argument("arquivo")
     revise = sub.add_parser("revisar", help="criar a próxima revisão de uma proposta")

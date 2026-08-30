@@ -7,6 +7,7 @@ import unittest
 from unittest.mock import patch
 
 from estimativa.cli import (
+    DEFAULT_PROPOSALS_DIR,
     _multiline_editor_command,
     add_item_to_section,
     ask_multiline,
@@ -135,6 +136,11 @@ class SectionCommandTests(unittest.TestCase):
 
 
 class HomeMenuTests(unittest.TestCase):
+    @patch("estimativa.cli.create_quote", return_value=0)
+    def test_new_uses_the_external_proposals_folder_by_default(self, create_quote):
+        self.assertEqual(main(["novo"]), 0)
+        create_quote.assert_called_once_with(DEFAULT_PROPOSALS_DIR)
+
     def test_saved_proposals_are_listed_with_newest_number_first(self):
         with tempfile.TemporaryDirectory() as folder:
             directory = Path(folder)
