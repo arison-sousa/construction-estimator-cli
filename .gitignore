@@ -5,3 +5,4 @@ output/
 tmp/
 .DS_Store
 .orcamento-descricao.tmp.txt
+/propostas/

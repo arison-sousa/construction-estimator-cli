@@ -1,9 +1,0 @@
-{
-  "info":{"client":"Seara","location":"Ipumirim - SC","project":"Chumbamento de 4 Pontaletes","contact":"Eduardo Ongaratto","city":"Ipumirim - SC","proposal":"0711-26-00","proposal_number":711,"proposal_year":2026,"proposal_revision":0,"issue_date":"18/08/2026"},
-  "items":[
-    {"number":"","title":"","description":"","unit":"vb","quantity":"1","material_unit":"0","labor_unit":"0","section":"Chumbamento de Pontaletes","section_number":"1","is_section":true},
-    {"number":"1.1","title":"","description":"Execução de quatro furos em piso de concreto, com serra-copo de 100 mm e profundidade de 200 mm, para instalação dos pontaletes fornecidos pela contratante.\n\nInclui preparação, limpeza e verificação prévia das condições do piso.","unit":"vb","quantity":"1","material_unit":"400.00","labor_unit":"2000.00","section":"","section_number":"","is_section":false},
-    {"number":"1.2","title":"","description":"Chumbamento de quatro pontaletes em tubo inox 4 pol. SCH-10, com 800 mm de altura, utilizando graute e preenchimento interno com concreto.\n\nInclui nivelamento, alinhamento, acabamento com uretano Polipiso e limpeza final da área.","unit":"vb","quantity":"1","material_unit":"1100.00","labor_unit":"5000.00","section":"","section_number":"","is_section":false}
-  ],
-  "validity":"15 dias","payment_terms":"A definir","freight":"CIF","start_deadline":"Imediato após pedido","execution_deadline":"A definir","warranty":"12 meses","notes":"Atenciosamente,"
-}
